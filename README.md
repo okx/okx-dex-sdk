@@ -128,9 +128,8 @@ try {
 }
 ```
 
-## Important Notes
+## Important Notes (Solana)
 - Amount values should be in lamports (1 SOL = 1e9 lamports)
-- Private key must be in base58 format
 - Use a reliable RPC URL for best performance
 - Default compute units for transactions is 300,000 (configurable)
 - Default retry count is 3 (configurable)
