@@ -27,9 +27,11 @@ OKX_SECRET_KEY=your_secret_key
 OKX_API_PASSPHRASE=your_passphrase
 OKX_PROJECT_ID=your_project_id
 
+WALLET_ADDRESS=your_walllet_public_key
+PRIVATE_KEY=your_wallet_private_key
+
 # Required for Solana swaps
 SOLANA_RPC_URL=your_solana_rpc_url
-SOLANA_PRIVATE_KEY=your_base58_private_key
 ```
 
 ## Usage Examples
