@@ -154,9 +154,30 @@ export interface SolanaConfig {
         wsEndpoint?: string;
         confirmTransactionInitialTimeout?: number;
     };
+    walletAddress: string;
     privateKey: string;
     computeUnits?: number;
     maxRetries?: number;
+}
+
+export interface SuiConfig {
+    privateKey: string;
+    walletAddress: string;
+    connection?: {
+        rpcUrl: string;
+        wsEndpoint?: string;
+    };
+}
+
+// src/types.ts
+export interface EVMConfig {
+    walletAddress: string;
+    privateKey: string;
+    gasMultiplier?: number;
+    connection?: {
+        rpcUrl: string;
+        wsEndpoint?: string;
+    };
 }
 
 // Add configuration interfaces for chain-specific settings
@@ -183,6 +204,8 @@ export interface OKXConfig {
     baseUrl?: string;
     networks?: NetworkConfigs;
     solana?: SolanaConfig;
+    sui?: SuiConfig;
+    evm?: EVMConfig;
     timeout?: number;
     maxRetries?: number;
 }
