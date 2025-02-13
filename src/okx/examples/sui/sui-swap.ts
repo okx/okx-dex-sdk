@@ -35,7 +35,7 @@ async function main() {
             process.exit(1);
         }
 
-        const [fromTokenAddress, toTokenAddress, amount ] = args;
+        const [amount, fromTokenAddress, toTokenAddress ] = args;
 
         // Initialize client with configuration
         const client = new OKXDexClient({
