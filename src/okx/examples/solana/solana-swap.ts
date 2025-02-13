@@ -9,8 +9,8 @@ const requiredEnvVars = [
     'OKX_SECRET_KEY',
     'OKX_API_PASSPHRASE',
     'OKX_PROJECT_ID',
-    'WALLET_ADDRESS',
-    'PRIVATE_KEY',
+    'SOLANA_WALLET_ADDRESS',
+    'SOLANA_PRIVATE_KEY',
     'SOLANA_RPC_URL'
 ];
 
@@ -31,7 +31,8 @@ const client = new OKXDexClient({
             wsEndpoint: process.env.SOLANA_WS_URL,
             confirmTransactionInitialTimeout: 5000
         },
-        privateKey: process.env.PRIVATE_KEY!,
+        walletAddress: process.env.SOLANA_WALLET_ADDRESS!,
+        privateKey: process.env.SOLANA_PRIVATE_KEY!,
         computeUnits: 300000,
         maxRetries: 3
     }
@@ -107,7 +108,7 @@ async function executeSwap(
         toTokenAddress,
         amount: rawAmount,
         slippage: '0.5',
-        userWalletAddress: process.env.WALLET_ADDRESS
+        userWalletAddress: process.env.SOLANA_WALLET_ADDRESS
     });
 
     console.log('\nSwap completed successfully!');

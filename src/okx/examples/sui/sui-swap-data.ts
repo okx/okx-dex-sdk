@@ -9,7 +9,7 @@ const client = new OKXDexClient({
     projectId: process.env.OKX_PROJECT_ID!
 });
 
-const walletAddress = process.env.WALLET_ADDRESS!;
+const walletAddress = process.env.SUI_WALLET_ADDRESS!;
 
 async function main() {
     try {
@@ -28,3 +28,5 @@ async function main() {
         console.error('Error:', error);
     }
 }
+
+main();
