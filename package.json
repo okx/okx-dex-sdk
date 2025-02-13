@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "@mysten/sui": "^1.20.0",
+    "@okxweb3/coin-ethereum": "^1.0.12",
     "@okxweb3/coin-sui": "^1.1.0",
     "@solana/web3.js": "^1.98.0",
     "@types/bn.js": "^5.1.6",
@@ -22,7 +23,8 @@
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
     "transactions": "link:@mysten/sui/transactions",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "web3": "^4.16.0"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",

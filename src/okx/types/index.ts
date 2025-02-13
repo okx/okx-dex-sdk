@@ -160,10 +160,20 @@ export interface SolanaConfig {
     maxRetries?: number;
 }
 
-// src/types.ts (add these to your existing types)
 export interface SuiConfig {
     privateKey: string;
     walletAddress: string;
+    connection?: {
+        rpcUrl: string;
+        wsEndpoint?: string;
+    };
+}
+
+// src/types.ts
+export interface EVMConfig {
+    walletAddress: string;
+    privateKey: string;
+    gasMultiplier?: number;
     connection?: {
         rpcUrl: string;
         wsEndpoint?: string;
@@ -195,6 +205,7 @@ export interface OKXConfig {
     networks?: NetworkConfigs;
     solana?: SolanaConfig;
     sui?: SuiConfig;
+    evm?: EVMConfig;
     timeout?: number;
     maxRetries?: number;
 }
