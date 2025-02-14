@@ -34,6 +34,46 @@ export class DexAPI {
             confirmationTimeout: 60000,
             maxRetries: 3,
         },
+        "43114": { // Avalanche C-Chain
+            id: "43114",
+            explorer: "https://snowtrace.io/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "1": { // Ethereum Mainnet
+            id: "1",
+            explorer: "https://etherscan.io/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "137": { // Polygon Mainnet
+            id: "137",
+            explorer: "https://polygonscan.com/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "8453": { // Base Mainnet
+            id: "8453",
+            explorer: "https://basescan.org/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "196": { // X Layer Mainnet
+            id: "196",
+            explorer: "https://www.okx.com/web3/explorer/xlayer/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
     };
 
     constructor(
