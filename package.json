@@ -1,15 +1,15 @@
 {
   "name": "@okx-dex/okx-dex-sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["okx", "dex", "sdk"],
+  "author": "Julian Martinez",
+  "license": "MIT",
+  "description": "OKX DEX SDK",
   "dependencies": {
     "@mysten/sui": "^1.20.0",
     "@okxweb3/coin-ethereum": "^1.0.12",
