@@ -18,13 +18,13 @@ jobs:
       - name: Setup GitHub Package Registry
         run: |
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
-          echo "@okx:registry=https://npm.pkg.github.com" >> .npmrc
+          echo "@okx-dex:registry=https://npm.pkg.github.com" >> .npmrc
       
       - uses: actions/setup-node@v4
         with:
           node-version: '20.x'
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@okx'
+          scope: '@okx-dex'
       
       - uses: pnpm/action-setup@v2
         with:
