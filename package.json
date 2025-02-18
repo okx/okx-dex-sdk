@@ -37,6 +37,6 @@
     "url": "git+https://github.com/okx/okx-dex-sdk.git"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "registry": "https://registry.npmjs.org/"
   }
 }
