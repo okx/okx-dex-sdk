@@ -9,9 +9,9 @@ TypeScript SDK for the OKX DEX API, currently supporting Solana network DEX oper
 - Full TypeScript support
 - Solana transaction handling and signing
 
-## Setup
+## Installation
 
-1. Clone and install:
+1. Install:
 ```bash
 npm install @okx-dex/okx-dex-sdk
 ```
@@ -20,16 +20,27 @@ npm install @okx-dex/okx-dex-sdk
 
 3. Create `.env`:
 ```env
-OKX_API_KEY=your_api_key
-OKX_SECRET_KEY=your_secret_key
-OKX_API_PASSPHRASE=your_passphrase
-OKX_PROJECT_ID=your_project_id
+# OKX
+OKX_PROJECT_ID=
+OKX_API_KEY=
+OKX_SECRET_KEY=
+OKX_API_PASSPHRASE=
 
-WALLET_ADDRESS=your_walllet_public_key
-PRIVATE_KEY=your_wallet_private_key
+# Solana
+SOLANA_WALLET_ADDRESS=
+SOLANA_PRIVATE_KEY=
+SOLANA_RPC_URL=
+WS_ENDPONT=
 
-# Required for Solana swaps
-SOLANA_RPC_URL=your_solana_rpc_url
+# Sui
+SUI_WALLET_ADDRESS=
+SUI_PRIVATE_KEY=
+SUI_RPC_URL=
+
+# Evm
+EVM_WALLET_ADDRESS=
+EVM_PRIVATE_KEY=
+EVM_RPC_URL=
 ```
 
 ## Usage Examples
@@ -75,6 +86,7 @@ const swapResult = await client.dex.executeSwap({
     amount: '1000000000',
     autoSlippage: true,
     maxAutoSlippageBps: '100'  // 1% max auto slippage
+    userAddress: process.env.SOLANA_WALLET_ADDRESS!
 });
 ```
 
