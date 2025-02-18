@@ -1,36 +1,30 @@
-// scripts/ton-swap.ts
-import { getHeaders } from '../../shared';
+import { OKXDexClient } from '../../index';
+import 'dotenv/config';
+
+const client = new OKXDexClient({
+    apiKey: process.env.OKX_API_KEY!,
+    secretKey: process.env.OKX_SECRET_KEY!,
+    apiPassphrase: process.env.OKX_API_PASSPHRASE!,
+    projectId: process.env.OKX_PROJECT_ID!
+});
+
+const walletAddress = "TON_WALLET_ADDRESS";
 
 async function main() {
     try {
-        const params = {
-            chainId: '607', // Ton Chain ID
+        const quote = await client.dex.getSwapData({
+            chainId: '607',
+            fromTokenAddress: 'EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c',
+            toTokenAddress: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs',
             amount: '10000000000',
-            fromTokenAddress: 'EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c', // TON Native Token
-            toTokenAddress: 'EQCxE6mUtQJKFnGfaROTKOt1lZbDiiX1kCixRv7Nw2Id_sDs', // USDC
-            userWalletAddress: "UQA88qDUSmU9QpYYOwlwKZ1rmrSPEKVus0zLX56FJxD1cd6l",
-            slippage: "0.5",
-            autoSlippage: "true",
-            maxAutoSlippageBps: "100"
-        };
-
-        const timestamp = new Date().toISOString();
-        const requestPath = "/api/v5/dex/aggregator/swap";
-        const queryString = "?" + new URLSearchParams(params).toString();
-        const headers = getHeaders(timestamp, "GET", requestPath, queryString);
-
-        console.log('Getting Ton swap data...');
-        const response = await fetch(`https://www.okx.com${requestPath}${queryString}`, {
-            method: "GET",
-            headers
-        });
-
-        const data = await response.json();
-        console.log('Quote response:', JSON.stringify(data, null, 2));
-    } catch (error) {
-        console.error('Script failed:', error);
-        process.exit(1);
-    }
+            slippage: '0.1',
+        userWalletAddress: walletAddress,
+        autoSlippage: true
+    });
+    console.log('Swap Quote:', JSON.stringify(quote, null, 2));
+} catch (error) {
+    console.error('Error:', error);
+}
 }
 
 main();
