@@ -22,11 +22,10 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: 8
-      
+          
       - run: pnpm install
       
       - run: pnpm build
-        if: ${{ contains(github.ref, 'refs/tags/') }}
       
       - run: pnpm publish
         env:
