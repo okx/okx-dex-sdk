@@ -6,7 +6,11 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
-  "keywords": ["okx", "dex", "sdk"],
+  "keywords": [
+    "okx",
+    "dex",
+    "sdk"
+  ],
   "author": "Julian Martinez",
   "license": "MIT",
   "description": "OKX DEX SDK",
