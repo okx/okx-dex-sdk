@@ -47,7 +47,7 @@ EVM_RPC_URL=
 
 ### Initialize Client
 ```typescript
-import { DexClient } from '@okx-dex/okx-dex-sdk';
+import { OKXDexClient } from '@okx-dex/okx-dex-sdk';
 import 'dotenv/config';
 
 const client = new OKXDexClient({
@@ -61,7 +61,8 @@ const client = new OKXDexClient({
             rpcUrl: process.env.SOLANA_RPC_URL!,
             confirmTransactionInitialTimeout: 60000
         },
-        privateKey: process.env.SOLANA_PRIVATE_KEY!
+        privateKey: process.env.SOLANA_PRIVATE_KEY!,
+        walletAddress: process.env.SOLANA_WALLET_ADDRESS!
     }
 });
 ```
