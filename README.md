@@ -15,7 +15,7 @@ TypeScript SDK for the OKX DEX API, currently supporting Solana network DEX oper
 ```bash
 git clone https://github.com/okx/okx-dex-sdk.git
 cd okx-dex-sdk
-npm install
+pnpm install
 ```
 
 2. Get your API credentials from [OKX Developer Portal](https://www.okx.com/web3/build/docs/waas/introduction-to-developer-portal-interface)

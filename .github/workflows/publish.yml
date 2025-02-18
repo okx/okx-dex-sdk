@@ -17,12 +17,13 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://npm.pkg.github.com'
-          scope: '@okx-dex'    # Changed to match your package.json
+          scope: '@okx-dex'
       
-      - run: npm ci
+      - run: pnpm install
       
-      - run: npm build    # Added build step since you have TypeScript
+      - run: pnpm build
+        if: ${{ contains(github.ref, 'refs/tags/') }}
       
-      - run: npm publish
+      - run: pnpm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
