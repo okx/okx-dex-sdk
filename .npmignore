@@ -1,0 +1,9 @@
+src/
+tests/
+jest.config.js
+tsconfig.json
+.env
+.env.example
+.git
+.gitignore
+.npmrc
