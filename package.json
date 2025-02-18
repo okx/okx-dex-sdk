@@ -1,5 +1,5 @@
 {
-  "name": "@okx/okx-dex-sdk",
+  "name": "@okx-dex/okx-dex-sdk",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -32,7 +32,10 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5"
   },
-  "repository": "https://github.com/okx/okx-dex-sdk.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okx/okx-dex-sdk.git"
+  },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   }
