@@ -19,6 +19,10 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@okx-dex'
       
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
       - run: pnpm install
       
       - run: pnpm build
