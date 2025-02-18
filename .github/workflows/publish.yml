@@ -1,4 +1,5 @@
 name: Publish Package to GitHub Packages
+
 on:
   release:
     types: [created]
@@ -29,9 +30,8 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: 8
-          
-      - run: pnpm install
       
+      - run: pnpm install
       - run: pnpm build
       
       - run: pnpm publish --no-git-checks
