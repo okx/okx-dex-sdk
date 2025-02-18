@@ -1,5 +1,5 @@
 {
-  "name": "@okx-dex/okx-dex-sdk", 
+  "name": "@okx-dex/okx-dex-sdk",
   "version": "1.0.1",
   "main": "index.js",
   "scripts": {
