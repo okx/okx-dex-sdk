@@ -13,7 +13,6 @@
     "prepare": "npm run clean && npm run build",
     "prepublishOnly": "npm test"
   },
-
   "keywords": [
     "okx",
     "dex",
@@ -29,7 +28,6 @@
     "@solana/web3.js": "^1.98.0",
     "@types/bn.js": "^5.1.6",
     "@types/bs58": "^4.0.4",
-    "@types/node": "^22.10.5",
     "bn.js": "^5.2.1",
     "bs58": "^6.0.0",
     "crypto-js": "^4.2.0",
@@ -41,6 +39,7 @@
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
     "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.4",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5"
   },
