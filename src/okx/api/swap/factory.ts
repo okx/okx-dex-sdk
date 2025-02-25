@@ -28,8 +28,6 @@ export class SwapExecutorFactory {
                 return new EVMSwapExecutor(config, networkConfig);
             case "169": // Manta Pacific
                 return new EVMSwapExecutor(config, networkConfig);
-            case "204": // opBNB
-                return new EVMSwapExecutor(config, networkConfig);
             case "250": // Fantom Opera
                 return new EVMSwapExecutor(config, networkConfig);
             case "324": // zkSync Era
@@ -39,6 +37,24 @@ export class SwapExecutorFactory {
             case "5000": // Mantle
                 return new EVMSwapExecutor(config, networkConfig);
             case "43114": // Avalanche C-Chain
+                return new EVMSwapExecutor(config, networkConfig);
+            case "25": // Cronos
+                return new EVMSwapExecutor(config, networkConfig);
+            case "5757": // Stacks
+                return new EVMSwapExecutor(config, networkConfig);
+            case "534352": // Scroll
+                return new EVMSwapExecutor(config, networkConfig);
+            case "59144": // Linea
+                return new EVMSwapExecutor(config, networkConfig);
+            case "1088": // Metis
+                return new EVMSwapExecutor(config, networkConfig);
+            case "1030": // Conflux
+                return new EVMSwapExecutor(config, networkConfig);
+            case "81457": // Blast
+                return new EVMSwapExecutor(config, networkConfig);
+            case "7000": // Zeta Chain
+                return new EVMSwapExecutor(config, networkConfig);
+            case "66": // OKT Chain
                 return new EVMSwapExecutor(config, networkConfig);
             default:
                 throw new Error(`Chain ${chainId} not supported for swap execution`);
