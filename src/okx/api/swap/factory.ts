@@ -12,6 +12,34 @@ export class SwapExecutorFactory {
                 return new SuiSwapExecutor(config, networkConfig);
             case "196": // X Layer
                 return new EVMSwapExecutor(config, networkConfig);
+            case "1": // Ethereum
+                return new EVMSwapExecutor(config, networkConfig);
+            case "137": // Polygon
+                return new EVMSwapExecutor(config, networkConfig);
+            case "8453": // Base
+                return new EVMSwapExecutor(config, networkConfig);
+            case "10": // Optimism
+                return new EVMSwapExecutor(config, networkConfig);
+            case "42161": // Arbitrum
+                return new EVMSwapExecutor(config, networkConfig);
+            case "56": // Binance Smart Chain
+                return new EVMSwapExecutor(config, networkConfig);
+            case "100": // Gnosis
+                return new EVMSwapExecutor(config, networkConfig);
+            case "169": // Manta Pacific
+                return new EVMSwapExecutor(config, networkConfig);
+            case "204": // opBNB
+                return new EVMSwapExecutor(config, networkConfig);
+            case "250": // Fantom Opera
+                return new EVMSwapExecutor(config, networkConfig);
+            case "324": // zkSync Era
+                return new EVMSwapExecutor(config, networkConfig);
+            case "1101": // Polygon zkEVM
+                return new EVMSwapExecutor(config, networkConfig);
+            case "5000": // Mantle
+                return new EVMSwapExecutor(config, networkConfig);
+            case "43114": // Avalanche C-Chain
+                return new EVMSwapExecutor(config, networkConfig);
             default:
                 throw new Error(`Chain ${chainId} not supported for swap execution`);
         }
