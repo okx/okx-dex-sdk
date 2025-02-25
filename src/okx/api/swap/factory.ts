@@ -40,8 +40,6 @@ export class SwapExecutorFactory {
                 return new EVMSwapExecutor(config, networkConfig);
             case "25": // Cronos
                 return new EVMSwapExecutor(config, networkConfig);
-            case "5757": // Stacks
-                return new EVMSwapExecutor(config, networkConfig);
             case "534352": // Scroll
                 return new EVMSwapExecutor(config, networkConfig);
             case "59144": // Linea

@@ -19,7 +19,7 @@ export class DexAPI {
     private readonly defaultNetworkConfigs: NetworkConfigs = {
         "501": {
             id: "501",
-            explorer: "https://solscan.io/tx",
+            explorer: "https://www.okx.com/web3/explorer/sol/tx",
             defaultSlippage: "0.5",
             maxSlippage: "1",
             computeUnits: 300000,
@@ -28,7 +28,7 @@ export class DexAPI {
         },
         "784": {
             id: "784",
-            explorer: "https://suiscan.xyz/mainnet/tx",
+            explorer: "https://www.okx.com/web3/explorer/sui/tx",
             defaultSlippage: "0.5",
             maxSlippage: "1",
             confirmationTimeout: 60000,
@@ -36,7 +36,7 @@ export class DexAPI {
         },
         "43114": { // Avalanche C-Chain
             id: "43114",
-            explorer: "https://snowtrace.io/tx",
+            explorer: "https://www.okx.com/web3/explorer/avax/tx",
             defaultSlippage: "0.5",
             maxSlippage: "1",
             confirmationTimeout: 60000,
@@ -44,7 +44,7 @@ export class DexAPI {
         },
         "1": { // Ethereum Mainnet
             id: "1",
-            explorer: "https://etherscan.io/tx",
+            explorer: "https://www.okx.com/web3/explorer/eth/tx",
             defaultSlippage: "0.5",
             maxSlippage: "1",
             confirmationTimeout: 60000,
@@ -52,7 +52,7 @@ export class DexAPI {
         },
         "137": { // Polygon Mainnet
             id: "137",
-            explorer: "https://polygonscan.com/tx",
+            explorer: "https://www.okx.com/web3/explorer/polygon/tx",
             defaultSlippage: "0.5",
             maxSlippage: "1",
             confirmationTimeout: 60000,
@@ -60,7 +60,7 @@ export class DexAPI {
         },
         "8453": { // Base Mainnet
             id: "8453",
-            explorer: "https://basescan.org/tx",
+            explorer: "https://www.okx.com/web3/explorer/base/tx",
             defaultSlippage: "0.5",
             maxSlippage: "1",
             confirmationTimeout: 60000,
@@ -74,6 +74,143 @@ export class DexAPI {
             confirmationTimeout: 60000,
             maxRetries: 3,
         },
+        "10": { // Optimism
+            id: "10",
+            explorer: "https://www.okx.com/web3/explorer/optimism/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "42161": { // Arbitrum
+            id: "42161",
+            explorer: "https://www.okx.com/web3/explorer/arbitrum/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "56": { // Binance Smart Chain
+            id: "56",
+            explorer: "https://www.okx.com/web3/explorer/bsc/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "100": { // Gnosis
+            id: "100",
+            explorer: "https://www.okx.com/web3/explorer/gnosis/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "169": { // Manta Pacific
+            id: "169",
+            explorer: "https://www.okx.com/web3/explorer/manta/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "250": { // Fantom Opera
+            id: "250",
+            explorer: "https://www.okx.com/web3/explorer/ftm/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "324": { // zkSync Era
+            id: "324",
+            explorer: "https://www.okx.com/web3/explorer/zksync/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "1101": { // Polygon zkEVM
+            id: "1101",
+            explorer: "https://www.okx.com/web3/explorer/polygon-zkevm/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "5000": { // Mantle
+            id: "5000",
+            explorer: "https://www.okx.com/web3/explorer/mantle/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "25": { // Cronos
+            id: "25",
+            explorer: "https://cronoscan.com/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "534352": { // Scroll
+            id: "534352",
+            explorer: "https://www.okx.com/web3/explorer/scroll/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "59144": { // Linea
+            id: "59144",
+            explorer: "https://www.okx.com/web3/explorer/linea/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "1088": { // Metis
+            id: "1088",
+            explorer: "https://www.okx.com/web3/explorer/metis/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "1030": { // Conflux
+            id: "1030",
+            explorer: "https://www.confluxscan.io/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "81457": { // Blast
+            id: "81457",
+            explorer: "https://www.okx.com/web3/explorer/blast/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "7000": { // Zeta Chain
+            id: "7000",
+            explorer: "https://explorer.zetachain.com/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+        "66": { // OKT Chain
+            id: "66",
+            explorer: "https://www.okx.com/web3/explorer/oktc/tx",
+            defaultSlippage: "0.5",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
+
     };
 
     constructor(
@@ -176,13 +313,13 @@ export class DexAPI {
     async executeSwap(params: SwapParams): Promise<SwapResult> {
         const swapData = await this.getSwapData(params);
         const networkConfig = this.getNetworkConfig(params.chainId);
-        
+
         const executor = SwapExecutorFactory.createExecutor(
             params.chainId,
             this.config,
             networkConfig
         );
-        
+
         return executor.executeSwap(swapData, params);
     }
 }
