@@ -9,7 +9,7 @@ const client = new OKXDexClient({
     projectId: process.env.OKX_PROJECT_ID!
 });
 
-const walletAddress = process.env.WALLET_ADDRESS!;
+const walletAddress = process.env.SOLANA_WALLET_ADDRESS!;
 
 async function main() {
     try {
@@ -21,7 +21,6 @@ async function main() {
             amount: '1000000000',
             slippage: '0.1',
             userWalletAddress: walletAddress,
-            autoSlippage: true,  // Changed from "true" to true
         });
         console.log('Swap Quote:', JSON.stringify(quote, null, 2));
     } catch (error) {

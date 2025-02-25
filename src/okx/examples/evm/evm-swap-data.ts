@@ -9,7 +9,7 @@ const client = new OKXDexClient({
     projectId: process.env.OKX_PROJECT_ID!
 });
 
-const walletAddress = process.env.WALLET_ADDRESS!;
+const walletAddress = process.env.EVM_WALLET_ADDRESS!;
 
 async function main() {
     try {

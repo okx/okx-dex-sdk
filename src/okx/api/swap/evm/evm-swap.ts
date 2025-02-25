@@ -14,7 +14,7 @@ export class EVMSwapExecutor implements SwapExecutor {
         if (!this.config.evm) {
             throw new Error("EVM configuration required");
         }
-        this.web3 = new Web3(this.config.evm.connection?.rpcUrl || 'https://rpc.xlayer.tech');
+        this.web3 = new Web3(this.config.evm.connection?.rpcUrl || '');
     }
 
     async executeSwap(swapData: SwapResponseData, params: SwapParams): Promise<SwapResult> {
