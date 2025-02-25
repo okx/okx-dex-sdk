@@ -1,5 +1,7 @@
 # OKX DEX SDK
 
+[![npm version](https://img.shields.io/npm/v/@okx-dex/okx-dex-sdk.svg)](https://www.npmjs.com/package/@okx-dex/okx-dex-sdk)
+
 TypeScript SDK for the OKX DEX API, currently supporting Solana network DEX operations. This SDK provides easy integration for getting quotes, executing swaps, and managing liquidity on Solana, with built-in authentication, retries, and error handling.
 
 ## Features
