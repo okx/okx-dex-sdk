@@ -152,3 +152,9 @@ try {
 ## Useful Links
 - [OKX DEX API Docs](https://www.okx.com/web3/build/docs/waas/dex-api-reference)
 - [Developer Portal](https://www.okx.com/web3/build/docs/waas/introduction-to-developer-portal-interface)
+
+
+## Legal
+This SDK is released under the [MIT License](LICENSE.md).
+
+By using this SDK, you agree to the fact that: OKX and its affiliates shall not be liable for any direct, indirect, incidental, special, consequential or exemplary damages as outlined in the [Legal Disclaimer](DISCLAIMER.md).
