@@ -12,6 +12,8 @@ import {
     ChainConfig,
     SwapResponseData,
     ChainData,
+    ApproveTokenParams,
+    ApproveTokenResult,
 } from "../types";
 import { SwapExecutorFactory } from "./swap/factory";
 
@@ -246,7 +248,7 @@ export class DexAPI {
         }
 
         return apiParams;
-    }
+    }    
 
     async getQuote(params: QuoteParams): Promise<APIResponse<QuoteData>> {
         return this.client.request(
@@ -264,7 +266,7 @@ export class DexAPI {
         );
     }
 
-    async getSupportedChains(chainId: string): Promise<APIResponse<ChainData>> {
+    async getChainData(chainId: string): Promise<APIResponse<ChainData>> {
         return this.client.request(
             "GET",
             "/api/v5/dex/aggregator/supported/chain",
@@ -321,5 +323,52 @@ export class DexAPI {
         );
 
         return executor.executeSwap(swapData, params);
+    }
+
+    async executeApproval(params: ApproveTokenParams): Promise<{ transactionHash: string; explorerUrl: string }> {
+        try {
+            // Get network configuration
+            const networkConfig = this.getNetworkConfig(params.chainId);
+            
+            // Get the DEX approval address from supported chains
+            const chainsData = await this.getChainData(params.chainId);
+            const dexTokenApproveAddress = chainsData.data?.[0]?.dexTokenApproveAddress;
+            if (!dexTokenApproveAddress) {
+                throw new Error(`No dex contract address found for chain ${params.chainId}`);
+            }
+            
+            // Create the approve executor
+            const executor = SwapExecutorFactory.createApproveExecutor(
+                params.chainId, 
+                this.config, 
+                networkConfig
+            );
+            
+            // Execute approval with the contract address from supported chains
+            const result = await executor.handleTokenApproval(
+                params.chainId,
+                params.tokenContractAddress,
+                params.approveAmount,
+            );
+            
+            // Return formatted result
+            return {
+                transactionHash: result.transactionHash,
+                explorerUrl: `${networkConfig.explorer}/${result.transactionHash}`
+            };
+        } catch (error) {
+            // Check if it's an "already approved" error, which is not a real error
+            if (error instanceof Error && error.message.includes("already approved")) {
+                // Return a mock result for already approved tokens
+                return {
+                    transactionHash: "",
+                    explorerUrl: "",
+                    alreadyApproved: true,
+                    message: "Token already approved for the requested amount"
+                } as any;
+            }
+            // Otherwise, rethrow the error
+            throw error;
+        }
     }
 }

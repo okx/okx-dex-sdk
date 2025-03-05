@@ -4,6 +4,29 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Increase timeout for all tests
+jest.setTimeout(60000);
+
+// Helper function for retrying rate-limited requests with exponential backoff
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 5): Promise<T> {
+  let retries = maxRetries;
+  while (retries > 0) {
+    try {
+      return await fn();
+    } catch (error: any) {
+      if (error?.status === 429 && retries > 1) {
+        const delay = (maxRetries - retries + 1) * 5000; // Exponential backoff: 5s, 10s, 15s...
+        console.log(`Rate limited. Waiting ${delay/1000}s before retry. ${retries-1} retries remaining.`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        retries--;
+        continue;
+      }
+      throw error;
+    }
+  }
+  throw new Error('Max retries exceeded');
+}
+
 describe('OKXDexClient Chain Support', () => {
   let client: OKXDexClient;
 
@@ -16,6 +39,11 @@ describe('OKXDexClient Chain Support', () => {
     });
   });
 
+  // Add longer delay between tests to avoid rate limiting
+  beforeEach(async () => {
+    await new Promise(resolve => setTimeout(resolve, 5000));
+  });
+
   const chainTestCases = [
     { name: 'EVM', chainId: '1' },
     { name: 'Solana', chainId: '501' },
@@ -24,10 +52,10 @@ describe('OKXDexClient Chain Support', () => {
     { name: 'Tron', chainId: '195' }
   ];
 
-  describe('getSupportedChains', () => {
+  describe('getChainData', () => {
     chainTestCases.forEach(({ name, chainId }) => {
       it(`should fetch supported chains for ${name}`, async () => {
-        const chains = await client.dex.getSupportedChains(chainId);
+        const chains = await withRetry(() => client.dex.getChainData(chainId));
         
         expect(chains).toBeDefined();
         expect(chains.data).toBeDefined();
@@ -43,7 +71,7 @@ describe('OKXDexClient Chain Support', () => {
     });
 
     it('should handle invalid chain ID', async () => {
-      await expect(client.dex.getSupportedChains('999999')).rejects.toThrow();
+      await expect(client.dex.getChainData('999999')).rejects.toThrow();
     });
   });
 
@@ -71,7 +99,7 @@ describe('Chain-Specific Features', () => {
 
   describe('EVM Chain Tests', () => {
     it('should handle EVM-specific chain data', async () => {
-      const chains = await client.dex.getSupportedChains('1');
+      const chains = await client.dex.getChainData('1');
       expect(chains).toBeDefined();
       expect(chains.data).toBeDefined();
       expect(chains.data.length).toBeGreaterThan(0);
@@ -80,7 +108,7 @@ describe('Chain-Specific Features', () => {
 
   describe('Solana Chain Tests', () => {
     it('should handle Solana-specific chain data', async () => {
-      const chains = await client.dex.getSupportedChains('501');
+      const chains = await client.dex.getChainData('501');
       expect(chains).toBeDefined();
       expect(chains.data).toBeDefined();
       expect(chains.data.length).toBeGreaterThan(0);
@@ -89,7 +117,7 @@ describe('Chain-Specific Features', () => {
 
   describe('Sui Chain Tests', () => {
     it('should handle Sui-specific chain data', async () => {
-      const chains = await client.dex.getSupportedChains('784');
+      const chains = await client.dex.getChainData('784');
       expect(chains).toBeDefined();
       expect(chains.data).toBeDefined();
       expect(chains.data.length).toBeGreaterThan(0);
@@ -98,7 +126,7 @@ describe('Chain-Specific Features', () => {
 
   describe('TON Chain Tests', () => {
     it('should handle TON-specific chain data', async () => {
-      const chains = await client.dex.getSupportedChains('607');
+      const chains = await client.dex.getChainData('607');
       expect(chains).toBeDefined();
       expect(chains.data).toBeDefined();
       expect(chains.data.length).toBeGreaterThan(0);
@@ -107,7 +135,7 @@ describe('Chain-Specific Features', () => {
 
   describe('Tron Chain Tests', () => {
     it('should handle Tron-specific chain data', async () => {
-      const chains = await client.dex.getSupportedChains('195');
+      const chains = await client.dex.getChainData('195');
       expect(chains).toBeDefined();
       expect(chains.data).toBeDefined();
       expect(chains.data.length).toBeGreaterThan(0);

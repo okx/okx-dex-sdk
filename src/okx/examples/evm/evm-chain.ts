@@ -11,8 +11,9 @@ const client = new OKXDexClient({
 
 async function main() {
     try {
-        const chains = await client.dex.getSupportedChains("1");
+        const chains = await client.dex.getChainData("8453");
         console.log('Supported chains:', JSON.stringify(chains, null, 2));
+        console.log('dexTokenApproveAddress', chains.data[0].dexTokenApproveAddress);
     } catch (error) {
         console.error('Error:', error);
     }

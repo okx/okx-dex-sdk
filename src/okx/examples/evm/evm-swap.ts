@@ -60,7 +60,7 @@ async function main() {
 
         // Get quote
         const quote = await client.dex.getQuote({
-            chainId: '196',
+            chainId: '8453',
             fromTokenAddress,
             toTokenAddress,
             amount: quoteAmount,
@@ -95,7 +95,7 @@ async function main() {
         // Execute the swap
         console.log("\nExecuting swap...");
         const result = await client.dex.executeSwap({
-            chainId: '196',
+            chainId: '8453',
             fromTokenAddress,
             toTokenAddress,
             amount: rawAmount,

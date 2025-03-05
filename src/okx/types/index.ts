@@ -189,6 +189,7 @@ export interface ChainConfig {
     computeUnits?: number;
     confirmationTimeout?: number;
     maxRetries?: number;
+    dexContractAddress?: string;
 }
 
 export interface NetworkConfigs {
@@ -289,3 +290,16 @@ export interface FormattedSwapResponse {
         data: string;
     };
 }
+
+export interface ApproveTokenParams {
+    chainId: string;
+    tokenContractAddress: string;
+    approveAmount: string;
+}
+
+export interface ApproveTokenResult {
+    success: boolean;
+    transactionHash: string;
+    explorerUrl: string;
+}
+

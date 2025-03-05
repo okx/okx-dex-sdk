@@ -12,7 +12,7 @@ const client = new OKXDexClient({
 async function main() {
     try {
         const chainId = '607'; // Ton Chain ID
-        const chain = await client.dex.getSupportedChains(chainId);
+        const chain = await client.dex.getChainData(chainId);
         console.log('Supported chain:', JSON.stringify(chain, null, 2));
     } catch (error) {
         console.error('Error:', error);

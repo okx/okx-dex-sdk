@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/@okx-dex/okx-dex-sdk.svg)](https://www.npmjs.com/package/@okx-dex/okx-dex-sdk)
 
-TypeScript SDK for the OKX DEX API, currently supporting Solana network DEX operations. This SDK provides easy integration for getting quotes, executing swaps, and managing liquidity on Solana, with built-in authentication, retries, and error handling.
+A TypeScript SDK for interacting with OKX DEX across multiple chains (EVM, Solana, Sui).
 
 ## Features
 - Execute token swaps on Solana
@@ -13,41 +13,49 @@ TypeScript SDK for the OKX DEX API, currently supporting Solana network DEX oper
 
 ## Installation
 
-1. Install:
 ```bash
 npm install @okx-dex/okx-dex-sdk
+# or
+yarn add @okx-dex/okx-dex-sdk
+# or
+pnpm add @okx-dex/okx-dex-sdk
 ```
 
-2. Get your API credentials from [OKX Developer Portal](https://www.okx.com/web3/build/docs/waas/introduction-to-developer-portal-interface)
+## Configuration
 
-3. Create `.env`:
-```env
-# OKX
-OKX_PROJECT_ID=
-OKX_API_KEY=
-OKX_SECRET_KEY=
-OKX_API_PASSPHRASE=
+First, set up your environment variables in a `.env` file:
 
-# Solana
-SOLANA_WALLET_ADDRESS=
-SOLANA_PRIVATE_KEY=
-SOLANA_RPC_URL=
-WS_ENDPONT=
+```bash
+# OKX API Credentials
+OKX_API_KEY=your_api_key
+OKX_SECRET_KEY=your_secret_key
+OKX_API_PASSPHRASE=your_passphrase
+OKX_PROJECT_ID=your_project_id
 
-# Sui
-SUI_WALLET_ADDRESS=
-SUI_PRIVATE_KEY=
-SUI_RPC_URL=
+# EVM Configuration
+EVM_RPC_URL=your_evm_rpc_url
+EVM_WALLET_ADDRESS=your_evm_wallet_address
+EVM_PRIVATE_KEY=your_evm_private_key
 
-# Evm
-EVM_WALLET_ADDRESS=
-EVM_PRIVATE_KEY=
-EVM_RPC_URL=
+# Solana Configuration
+SOLANA_RPC_URL=your_solana_rpc_url
+SOLANA_WALLET_ADDRESS=your_solana_wallet_address
+SOLANA_PRIVATE_KEY=your_solana_private_key
+
+# Sui Configuration
+SUI_RPC_URL=your_sui_rpc_url
+SUI_WALLET_ADDRESS=your_sui_wallet_address
+SUI_PRIVATE_KEY=your_sui_private_key
 ```
 
-## Usage Examples
+## Usage
 
-### Initialize Client
+### Chain-Specific Examples
+
+<details>
+<summary><b>EVM</b></summary>
+
+#### Initialize EVM Client
 ```typescript
 import { OKXDexClient } from '@okx-dex/okx-dex-sdk';
 import 'dotenv/config';
@@ -57,104 +65,218 @@ const client = new OKXDexClient({
     secretKey: process.env.OKX_SECRET_KEY!,
     apiPassphrase: process.env.OKX_API_PASSPHRASE!,
     projectId: process.env.OKX_PROJECT_ID!,
-    // Required for executing swaps
+    evm: {
+        connection: {
+            rpcUrl: process.env.EVM_RPC_URL!,
+        },
+        walletAddress: process.env.EVM_WALLET_ADDRESS!,
+        privateKey: process.env.EVM_PRIVATE_KEY!,
+    }
+});
+```
+
+#### Common Base Chain Token Addresses
+```typescript
+const TOKENS = {
+    USDC: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913',
+    WETH: '0x4200000000000000000000000000000000000006'
+};
+```
+
+#### Get Quote (USDC → WETH)
+```typescript
+const quote = await client.dex.getQuote({
+    chainId: '8453',  // Base Chain
+    fromTokenAddress: TOKENS.USDC,
+    toTokenAddress: TOKENS.WETH,
+    amount: '1000000',  // 1 USDC
+    slippage: '0.5'     // 0.5%
+});
+```
+
+#### Token Approval
+```typescript
+const approval = await client.dex.executeApproval({
+    chainId: '8453',
+    tokenContractAddress: TOKENS.USDC,
+    approveAmount: '1000000'
+});
+```
+
+#### Execute Swap
+```typescript
+const swapData = await client.dex.getSwapData({
+    chainId: '8453',
+    fromTokenAddress: TOKENS.USDC,
+    toTokenAddress: TOKENS.WETH,
+    amount: '1000000',
+    slippage: '0.5',
+    userWalletAddress: process.env.EVM_WALLET_ADDRESS!
+});
+```
+</details>
+
+<details>
+<summary><b>Solana</b></summary>
+
+#### Initialize Solana Client
+```typescript
+import { OKXDexClient } from '@okx-dex/okx-dex-sdk';
+import 'dotenv/config';
+
+const client = new OKXDexClient({
+    apiKey: process.env.OKX_API_KEY!,
+    secretKey: process.env.OKX_SECRET_KEY!,
+    apiPassphrase: process.env.OKX_API_PASSPHRASE!,
+    projectId: process.env.OKX_PROJECT_ID!,
     solana: {
         connection: {
             rpcUrl: process.env.SOLANA_RPC_URL!,
             confirmTransactionInitialTimeout: 60000
         },
+        walletAddress: process.env.SOLANA_WALLET_ADDRESS!,
         privateKey: process.env.SOLANA_PRIVATE_KEY!,
-        walletAddress: process.env.SOLANA_WALLET_ADDRESS!
     }
 });
 ```
 
-### Get Quote (SOL → USDC)
-```typescript
-const quote = await client.dex.getQuote({
-    chainId: '501',
-    fromTokenAddress: 'So11111111111111111111111111111111111111112',  // SOL
-    toTokenAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',  // USDC
-    amount: '1000000000',  // 1 SOL (in lamports)
-    slippage: '0.001'      // 0.1%
-});
-```
-
-### Execute Swap
-```typescript
-const swapResult = await client.dex.executeSwap({
-    chainId: '501',
-    fromTokenAddress: 'So11111111111111111111111111111111111111112',
-    toTokenAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-    amount: '1000000000',
-    autoSlippage: true,
-    maxAutoSlippageBps: '100'  // 1% max auto slippage
-    userAddress: process.env.SOLANA_WALLET_ADDRESS!
-});
-```
-
-## Common Solana Token Addresses
+#### Common Solana Token Addresses
 ```typescript
 const TOKENS = {
-    SOL: 'So11111111111111111111111111111111111111112',   // Wrapped SOL
+    SOL: 'So11111111111111111111111111111111111111112',
     USDC: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
     USDT: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB'
 };
 ```
 
-## API Reference
-
-### Available Methods
+#### Get Quote (SOL → USDC)
 ```typescript
-// Get supported chains
-const chains = await client.dex.getSupportedChains();
+const quote = await client.dex.getQuote({
+    chainId: '501',
+    fromTokenAddress: TOKENS.SOL,
+    toTokenAddress: TOKENS.USDC,
+    amount: '1000000000',  // 1 SOL (in lamports)
+    slippage: '0.5'        // 0.5%
+});
+```
 
-// Get Solana tokens
-const tokens = await client.dex.getTokens('501');
+#### Execute Swap
+```typescript
+const swapData = await client.dex.getSwapData({
+    chainId: '501',
+    fromTokenAddress: TOKENS.SOL,
+    toTokenAddress: TOKENS.USDC,
+    amount: '1000000000',
+    autoSlippage: true,
+    maxAutoSlippage: '1',
+    userWalletAddress: process.env.SOLANA_WALLET_ADDRESS!
+});
+```
+</details>
 
-// Get liquidity sources
-const liquidity = await client.dex.getLiquidity('501');
+<details>
+<summary><b>Sui</b></summary>
 
-// Get swap quote
-const quote = await client.dex.getQuote({...});
+#### Initialize Sui Client
+```typescript
+import { OKXDexClient } from '@okx-dex/okx-dex-sdk';
+import 'dotenv/config';
 
-// Get swap data (transaction details)
-const swapData = await client.dex.getSwapData({...});
+const client = new OKXDexClient({
+    apiKey: process.env.OKX_API_KEY!,
+    secretKey: process.env.OKX_SECRET_KEY!,
+    apiPassphrase: process.env.OKX_API_PASSPHRASE!,
+    projectId: process.env.OKX_PROJECT_ID!,
+    sui: {
+        connection: {
+            rpcUrl: process.env.SUI_RPC_URL!,
+        },
+        walletAddress: process.env.SUI_WALLET_ADDRESS!,
+        privateKey: process.env.SUI_PRIVATE_KEY!,
+    }
+});
+```
 
-// Execute swap
-const swapResult = await client.dex.executeSwap({...});
+#### Common Sui Token Addresses
+```typescript
+const TOKENS = {
+    SUI: '0x2::sui::SUI',
+    USDC: '0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC'
+};
+```
+
+#### Get Quote (SUI → USDC)
+```typescript
+const quote = await client.dex.getQuote({
+    chainId: '784',
+    fromTokenAddress: TOKENS.SUI,
+    toTokenAddress: TOKENS.USDC,
+    amount: '1000000000',  // Amount in base units
+    slippage: '0.1'        // 0.1%
+});
+```
+
+#### Execute Swap
+```typescript
+const swapData = await client.dex.getSwapData({
+    chainId: '784',
+    fromTokenAddress: TOKENS.SUI,
+    toTokenAddress: TOKENS.USDC,
+    amount: '1000000000',
+    autoSlippage: true,
+    maxAutoSlippage: '1',
+    userWalletAddress: process.env.SUI_WALLET_ADDRESS!,
+    slippage: '0.1'
+});
+```
+</details>
+
+## Common Operations
+
+### Check Liquidity
+```typescript
+const liquidity = await client.dex.getLiquidity(chainId);
+```
+
+### Get Dex Router Address
+```typescript
+const chainInfo = await client.dex.getChainData(chainId);
 ```
 
 ## Error Handling
-The SDK includes built-in retries for transient errors:
+
+The SDK includes comprehensive error handling:
 
 ```typescript
 try {
-    const result = await client.dex.getSwapData(params);
-} catch (error) {
-    if (error instanceof Error) {
-        console.error('Error message:', error.message);
-        // API errors include details in the message
-        if (error.message.includes('API Error:')) {
-            const match = error.message.match(/API Error: (.*)/);
-            if (match) console.error('API Error Details:', match[1]);
-        }
+    const quote = await client.dex.getQuote({...});
+} catch (error: any) {
+    if (error?.status === 429) {
+        console.log('Rate limited, please try again later');
+    } else if (error.message?.includes('Insufficient liquidity')) {
+        console.log('Not enough liquidity for this trade');
+    } else {
+        console.error('Error:', error.message);
     }
 }
 ```
 
-## Important Notes (Solana)
-- Amount values should be in lamports (1 SOL = 1e9 lamports)
-- Use a reliable RPC URL for best performance
-- Default compute units for transactions is 300,000 (configurable)
-- Default retry count is 3 (configurable)
+## Testing
 
-## Useful Links
-- [OKX DEX API Docs](https://www.okx.com/web3/build/docs/waas/dex-api-reference)
-- [Developer Portal](https://www.okx.com/web3/build/docs/waas/introduction-to-developer-portal-interface)
+Run tests for specific chains:
 
+```bash
+# Run all tests
+pnpm test
 
-## Legal
+# Run chain-specific tests
+pnpm test __tests__/evm-examples.test.ts
+pnpm test __tests__/solana-examples.test.ts
+pnpm test __tests__/sui-examples.test.ts
+```
+
+## License
+
 This SDK is released under the [MIT License](LICENSE.md).
 
 By using this SDK, you agree to the fact that: OKX and its affiliates shall not be liable for any direct, indirect, incidental, special, consequential or exemplary damages as outlined in the [Legal Disclaimer](DISCLAIMER.md).

@@ -3,6 +3,8 @@ import { SolanaSwapExecutor } from "./solana/solana-swap";
 import { SuiSwapExecutor } from "./sui/sui-swap";
 import { OKXConfig, ChainConfig } from "../../types";
 import { EVMSwapExecutor } from "./evm/evm-swap";
+import { EVMApproveExecutor } from "./evm/evm-approve";
+
 export class SwapExecutorFactory {
     static createExecutor(chainId: string, config: OKXConfig, networkConfig: ChainConfig): SwapExecutor {
         switch (chainId) {
@@ -11,51 +13,60 @@ export class SwapExecutorFactory {
             case "784": // Sui
                 return new SuiSwapExecutor(config, networkConfig);
             case "196": // X Layer
-                return new EVMSwapExecutor(config, networkConfig);
             case "1": // Ethereum
-                return new EVMSwapExecutor(config, networkConfig);
             case "137": // Polygon
-                return new EVMSwapExecutor(config, networkConfig);
             case "8453": // Base
-                return new EVMSwapExecutor(config, networkConfig);
             case "10": // Optimism
-                return new EVMSwapExecutor(config, networkConfig);
             case "42161": // Arbitrum
-                return new EVMSwapExecutor(config, networkConfig);
             case "56": // Binance Smart Chain
-                return new EVMSwapExecutor(config, networkConfig);
             case "100": // Gnosis
-                return new EVMSwapExecutor(config, networkConfig);
             case "169": // Manta Pacific
-                return new EVMSwapExecutor(config, networkConfig);
             case "250": // Fantom Opera
-                return new EVMSwapExecutor(config, networkConfig);
             case "324": // zkSync Era
-                return new EVMSwapExecutor(config, networkConfig);
             case "1101": // Polygon zkEVM
-                return new EVMSwapExecutor(config, networkConfig);
             case "5000": // Mantle
-                return new EVMSwapExecutor(config, networkConfig);
             case "43114": // Avalanche C-Chain
-                return new EVMSwapExecutor(config, networkConfig);
             case "25": // Cronos
-                return new EVMSwapExecutor(config, networkConfig);
             case "534352": // Scroll
-                return new EVMSwapExecutor(config, networkConfig);
             case "59144": // Linea
-                return new EVMSwapExecutor(config, networkConfig);
             case "1088": // Metis
-                return new EVMSwapExecutor(config, networkConfig);
             case "1030": // Conflux
-                return new EVMSwapExecutor(config, networkConfig);
             case "81457": // Blast
-                return new EVMSwapExecutor(config, networkConfig);
             case "7000": // Zeta Chain
-                return new EVMSwapExecutor(config, networkConfig);
             case "66": // OKT Chain
                 return new EVMSwapExecutor(config, networkConfig);
             default:
                 throw new Error(`Chain ${chainId} not supported for swap execution`);
+        }
+    }
+
+    static createApproveExecutor(chainId: string, config: OKXConfig, networkConfig: ChainConfig): EVMApproveExecutor {
+        switch (chainId) {
+            case "196": // X Layer
+            case "1": // Ethereum
+            case "137": // Polygon
+            case "8453": // Base
+            case "10": // Optimism
+            case "42161": // Arbitrum
+            case "56": // Binance Smart Chain
+            case "100": // Gnosis
+            case "169": // Manta Pacific
+            case "250": // Fantom Opera
+            case "324": // zkSync Era
+            case "1101": // Polygon zkEVM
+            case "5000": // Mantle
+            case "43114": // Avalanche C-Chain
+            case "25": // Cronos
+            case "534352": // Scroll
+            case "59144": // Linea
+            case "1088": // Metis
+            case "1030": // Conflux
+            case "81457": // Blast
+            case "7000": // Zeta Chain
+            case "66": // OKT Chain
+                return new EVMApproveExecutor(config, networkConfig);
+            default:
+                throw new Error(`Chain ${chainId} not supported for approve execution`);
         }
     }
 }
