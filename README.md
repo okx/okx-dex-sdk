@@ -105,13 +105,13 @@ const approval = await client.dex.executeApproval({
 
 #### Execute Swap
 ```typescript
-const swapData = await client.dex.getSwapData({
+const evmSwap = await client.dex.executeSwap({
     chainId: '8453',
-    fromTokenAddress: TOKENS.USDC,
-    toTokenAddress: TOKENS.WETH,
-    amount: '1000000',
+    fromTokenAddress,
+    toTokenAddress,
+    amount: rawAmount,
     slippage: '0.5',
-    userWalletAddress: process.env.EVM_WALLET_ADDRESS!
+    userWalletAddress: process.env.EVM_WALLET_ADDRESS
 });
 ```
 </details>
@@ -162,14 +162,13 @@ const quote = await client.dex.getQuote({
 
 #### Execute Swap
 ```typescript
-const swapData = await client.dex.getSwapData({
+const solanaSwap = await client.dex.executeSwap({
     chainId: '501',
-    fromTokenAddress: TOKENS.SOL,
-    toTokenAddress: TOKENS.USDC,
-    amount: '1000000000',
-    autoSlippage: true,
-    maxAutoSlippage: '1',
-    userWalletAddress: process.env.SOLANA_WALLET_ADDRESS!
+    fromTokenAddress,
+    toTokenAddress,
+    amount: rawAmount,
+    slippage: '0.5',
+    userWalletAddress: process.env.SOLANA_WALLET_ADDRESS
 });
 ```
 </details>
@@ -218,15 +217,13 @@ const quote = await client.dex.getQuote({
 
 #### Execute Swap
 ```typescript
-const swapData = await client.dex.getSwapData({
+const suiSwap = await client.dex.executeSwap({
     chainId: '784',
-    fromTokenAddress: TOKENS.SUI,
-    toTokenAddress: TOKENS.USDC,
-    amount: '1000000000',
-    autoSlippage: true,
-    maxAutoSlippage: '1',
-    userWalletAddress: process.env.SUI_WALLET_ADDRESS!,
-    slippage: '0.1'
+    fromTokenAddress,
+    toTokenAddress,
+    amount: rawAmount,
+    slippage: '0.5',
+    userWalletAddress: process.env.SUI_WALLET_ADDRESS
 });
 ```
 </details>
