@@ -13,7 +13,6 @@ import {
     SwapResponseData,
     ChainData,
     ApproveTokenParams,
-    ApproveTokenResult,
 } from "../types";
 import { SwapExecutorFactory } from "./swap/factory";
 

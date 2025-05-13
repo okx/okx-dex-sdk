@@ -4,6 +4,8 @@ import { HTTPClient } from '../core/http-client';
 
 export interface CrossChainQuoteParams {
     [key: string]: string | undefined;
+    fromChainIndex: string;
+    toChainIndex: string;
     fromChainId: string;
     toChainId: string;
     fromTokenAddress: string;
@@ -11,7 +13,7 @@ export interface CrossChainQuoteParams {
     amount: string;
     slippage: string;
     sort?: string;
-    feePercent?: string;
+    dexIds?: string;
     allowBridge?: string;
     denyBridge?: string;
     priceImpactProtectionPercentage?: string;
@@ -21,6 +23,7 @@ export interface CrossChainSwapParams extends CrossChainQuoteParams {
     userWalletAddress: string;
     receiveAddress?: string;
     referrerAddress?: string;
+    feePercent?: string;
     onlyBridge?: string;
     memo?: string;
 }

@@ -1,3 +1,5 @@
+import { Wallet } from '../core/wallet';
+
 // Base token info from API
 export interface TokenInfo {
     decimal: string;
@@ -149,35 +151,18 @@ export interface APIResponse<T> {
 
 // Configuration interfaces
 export interface SolanaConfig {
-    connection: {
-        rpcUrl: string;
-        wsEndpoint?: string;
-        confirmTransactionInitialTimeout?: number;
-    };
-    walletAddress: string;
-    privateKey: string;
+    wallet: Wallet;
     computeUnits?: number;
     maxRetries?: number;
 }
 
 export interface SuiConfig {
-    privateKey: string;
-    walletAddress: string;
-    connection?: {
-        rpcUrl: string;
-        wsEndpoint?: string;
-    };
+    wallet: Wallet;
 }
 
 // src/types.ts
 export interface EVMConfig {
-    walletAddress: string;
-    privateKey: string;
-    gasMultiplier?: number;
-    connection?: {
-        rpcUrl: string;
-        wsEndpoint?: string;
-    };
+    wallet: Wallet;
 }
 
 // Add configuration interfaces for chain-specific settings
