@@ -54,8 +54,11 @@ describe('EVM Examples Tests', () => {
       apiPassphrase: process.env.OKX_API_PASSPHRASE!,
       projectId: process.env.OKX_PROJECT_ID!,
       evm: {
-        walletAddress: process.env.EVM_WALLET_ADDRESS,
-        privateKey: process.env.EVM_PRIVATE_KEY
+        connection: {
+          rpcUrl: process.env.EVM_RPC_URL!,
+        },
+        walletAddress: process.env.EVM_WALLET_ADDRESS!,
+        privateKey: process.env.EVM_PRIVATE_KEY!,
       }
     });
   });
