@@ -2,6 +2,7 @@
 import { OKXDexClient } from '../src/okx/index';
 import dotenv from 'dotenv';
 
+// Load environment variables first
 dotenv.config();
 
 // Increase timeout for all tests
@@ -31,11 +32,24 @@ describe('OKXDexClient Chain Support', () => {
   let client: OKXDexClient;
 
   beforeAll(() => {
+    if (!process.env.OKX_API_KEY) {
+      throw new Error('OKX_API_KEY environment variable is required');
+    }
+    if (!process.env.OKX_SECRET_KEY) {
+      throw new Error('OKX_SECRET_KEY environment variable is required');
+    }
+    if (!process.env.OKX_API_PASSPHRASE) {
+      throw new Error('OKX_API_PASSPHRASE environment variable is required');
+    }
+    if (!process.env.OKX_PROJECT_ID) {
+      throw new Error('OKX_PROJECT_ID environment variable is required');
+    }
+
     client = new OKXDexClient({
-      apiKey: process.env.OKX_API_KEY || 'test-api-key',
-      secretKey: process.env.OKX_SECRET_KEY || 'test-secret-key',
-      apiPassphrase: process.env.OKX_API_PASSPHRASE || 'test-passphrase',
-      projectId: process.env.OKX_PROJECT_ID || 'test-project-id'
+      apiKey: process.env.OKX_API_KEY,
+      secretKey: process.env.OKX_SECRET_KEY,
+      apiPassphrase: process.env.OKX_API_PASSPHRASE,
+      projectId: process.env.OKX_PROJECT_ID
     });
   });
 

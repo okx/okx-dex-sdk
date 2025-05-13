@@ -1,6 +1,11 @@
 // example.ts or test.ts
 import { OKXDexClient } from '../../index';
+import { Connection } from '@solana/web3.js';
+import { createWallet } from '../../core/wallet';
 import 'dotenv/config';
+
+const connection = new Connection(process.env.SOLANA_RPC_URL!);
+const wallet = createWallet(process.env.SOLANA_PRIVATE_KEY!, connection);
 
 const client = new OKXDexClient({
     apiKey: process.env.OKX_API_KEY!,
@@ -8,11 +13,7 @@ const client = new OKXDexClient({
     apiPassphrase: process.env.OKX_API_PASSPHRASE!,
     projectId: process.env.OKX_PROJECT_ID!,
     solana: {
-        connection: {
-            rpcUrl: process.env.SOLANA_RPC_URL!,
-        },
-        walletAddress: process.env.SOLANA_WALLET_ADDRESS!,
-        privateKey: process.env.SOLANA_PRIVATE_KEY!
+        wallet: wallet
     }
 });
 

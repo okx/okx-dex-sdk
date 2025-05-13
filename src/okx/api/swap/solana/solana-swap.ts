@@ -1,5 +1,5 @@
 // src/api/swap/solana/solana-swap.ts
-import { Connection, Keypair, Transaction, VersionedTransaction, ComputeBudgetProgram } from "@solana/web3.js";
+import { Connection, Transaction, VersionedTransaction, ComputeBudgetProgram } from "@solana/web3.js";
 import base58 from "bs58";
 import { SwapExecutor } from "../types";
 import { SwapParams, SwapResponseData, SwapResult, ChainConfig, OKXConfig } from "../../../types";
@@ -46,29 +46,16 @@ export class SolanaSwapExecutor implements SwapExecutor {
     }
 
     private async executeSolanaTransaction(txData: string) {
-        // Decode private key and create keypair
-        const feePayer = Keypair.fromSecretKey(
-            base58.decode(this.config.solana!.privateKey)
-        );
-
-        // Get latest blockhash
-        const connection = new Connection(
-            this.config.solana!.connection.rpcUrl,
-            {
-                commitment: "confirmed",
-                wsEndpoint: this.config.solana!.connection.wsEndpoint,
-                confirmTransactionInitialTimeout: this.networkConfig.confirmationTimeout,
-            }
-        );
+        const connection = this.config.solana!.wallet.connection;
 
         const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash("confirmed");
 
         // Decode and prepare transaction
         const decodedTransaction = base58.decode(txData);
-        const transaction = await this.prepareTransaction(decodedTransaction, blockhash, feePayer);
+        const transaction = await this.prepareTransaction(decodedTransaction, blockhash);
 
-        // Send transaction
-        const signature = await connection.sendRawTransaction(transaction.serialize(), {
+        // Sign and send transaction using wallet
+        const { signature } = await this.config.solana!.wallet.signAndSendTransaction(transaction, {
             skipPreflight: false,
             maxRetries: this.networkConfig.maxRetries,
             preflightCommitment: "confirmed",
@@ -93,8 +80,7 @@ export class SolanaSwapExecutor implements SwapExecutor {
 
     private async prepareTransaction(
         decodedTransaction: Uint8Array,
-        blockhash: string,
-        feePayer: Keypair
+        blockhash: string
     ): Promise<Transaction | VersionedTransaction> {
         let transaction: Transaction | VersionedTransaction;
 
@@ -106,20 +92,13 @@ export class SolanaSwapExecutor implements SwapExecutor {
             // Fall back to legacy transaction
             transaction = Transaction.from(decodedTransaction);
             (transaction as Transaction).recentBlockhash = blockhash;
-            (transaction as Transaction).feePayer = feePayer.publicKey;
+            (transaction as Transaction).feePayer = this.config.solana!.wallet.publicKey;
 
             // Add compute budget for legacy transactions
             const computeBudgetIx = ComputeBudgetProgram.setComputeUnitLimit({
                 units: this.config.solana!.computeUnits || 300000,
             });
             (transaction as Transaction).add(computeBudgetIx);
-        }
-
-        // Sign transaction
-        if (transaction instanceof VersionedTransaction) {
-            transaction.sign([feePayer]);
-        } else {
-            transaction.sign(feePayer);
         }
 
         return transaction;

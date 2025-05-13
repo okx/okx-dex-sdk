@@ -1,5 +1,7 @@
 // src/examples/solana-swap.ts
 import { OKXDexClient } from '../../index';
+import { Connection } from '@solana/web3.js';
+import { createWallet } from '../../core/wallet';
 import 'dotenv/config';
 
 // Validate environment variables
@@ -32,6 +34,9 @@ async function main() {
 
         const [amount, fromTokenAddress, toTokenAddress] = args;
 
+        const connection = new Connection(process.env.SOLANA_RPC_URL!);
+        const wallet = createWallet(process.env.SOLANA_PRIVATE_KEY!, connection);
+
         // Initialize client
         const client = new OKXDexClient({
             apiKey: process.env.OKX_API_KEY!,
@@ -39,13 +44,7 @@ async function main() {
             apiPassphrase: process.env.OKX_API_PASSPHRASE!,
             projectId: process.env.OKX_PROJECT_ID!,
             solana: {
-                connection: {
-                    rpcUrl: process.env.SOLANA_RPC_URL!,
-                    wsEndpoint: process.env.SOLANA_WS_URL,
-                    confirmTransactionInitialTimeout: 5000
-                },
-                walletAddress: process.env.SOLANA_WALLET_ADDRESS!,
-                privateKey: process.env.SOLANA_PRIVATE_KEY!,
+                wallet: wallet,
                 computeUnits: 300000,
                 maxRetries: 3
             }
@@ -57,11 +56,8 @@ async function main() {
             chainId: '501',
             fromTokenAddress,
             toTokenAddress,
-            amount: '1000000', // Small amount for quote
-            slippage: '0.2',
-            dexIds: '277',
-            directRoute: true,
-            feePercent: '5'
+            amount: '100000000',
+            slippage: '0.5',
         });
 
         const tokenInfo = {
@@ -96,12 +92,7 @@ async function main() {
             toTokenAddress,
             amount: rawAmount,
             slippage: '0.2',
-            dexIds: '277',
-            directRoute: true,
-            userWalletAddress: process.env.SOLANA_WALLET_ADDRESS,
-            fromTokenReferrerWalletAddress: '',
-            // toTokenReferrerWalletAddress: '27tEZNjf3GbHisbkzpW75UR1QPjfXjRPoUQxVysogErk',
-            feePercent: '5'
+            userWalletAddress: wallet.publicKey.toString(),
         });
 
         console.log("\nSwap completed successfully!");

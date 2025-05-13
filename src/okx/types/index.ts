@@ -1,3 +1,5 @@
+import { Wallet } from '../core/wallet';
+
 // Base token info from API
 export interface TokenInfo {
     decimal: string;
@@ -149,13 +151,7 @@ export interface APIResponse<T> {
 
 // Configuration interfaces
 export interface SolanaConfig {
-    connection: {
-        rpcUrl: string;
-        wsEndpoint?: string;
-        confirmTransactionInitialTimeout?: number;
-    };
-    walletAddress: string;
-    privateKey: string;
+    wallet: Wallet;
     computeUnits?: number;
     maxRetries?: number;
 }
