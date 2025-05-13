@@ -60,6 +60,7 @@ async function main() {
             amount: '1000000', // Small amount for quote
             slippage: '0.2',
             dexIds: '277',
+            directRoute: true,
             feePercent: '5'
         });
 
@@ -95,9 +96,11 @@ async function main() {
             toTokenAddress,
             amount: rawAmount,
             slippage: '0.2',
+            dexIds: '277',
+            directRoute: true,
             userWalletAddress: process.env.SOLANA_WALLET_ADDRESS,
-            // fromTokenReferrerWalletAddress: '',
-            // toTokenReferrerWalletAddress: '',
+            fromTokenReferrerWalletAddress: '',
+            // toTokenReferrerWalletAddress: '27tEZNjf3GbHisbkzpW75UR1QPjfXjRPoUQxVysogErk',
             feePercent: '5'
         });
 
