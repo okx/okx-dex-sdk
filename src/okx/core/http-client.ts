@@ -33,13 +33,18 @@ export class HTTPClient {
 
     private getHeaders(timestamp: string, method: string, path: string, queryString = "") {
         const stringToSign = timestamp + method + path + queryString;
-
+        
+        // Ensure the string is properly encoded
+        const encodedString = CryptoJS.enc.Utf8.parse(stringToSign);
+        const secretKey = CryptoJS.enc.Utf8.parse(this.config.secretKey);
+        
+        // Create HMAC-SHA256 signature
+        const signature = CryptoJS.HmacSHA256(encodedString, secretKey);
+        
         return {
             "Content-Type": "application/json",
             "OK-ACCESS-KEY": this.config.apiKey,
-            "OK-ACCESS-SIGN": CryptoJS.enc.Base64.stringify(
-                CryptoJS.HmacSHA256(stringToSign, this.config.secretKey)
-            ),
+            "OK-ACCESS-SIGN": CryptoJS.enc.Base64.stringify(signature),
             "OK-ACCESS-TIMESTAMP": timestamp,
             "OK-ACCESS-PASSPHRASE": this.config.apiPassphrase,
             "OK-ACCESS-PROJECT": this.config.projectId,

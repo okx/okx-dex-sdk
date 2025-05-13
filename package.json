@@ -1,6 +1,6 @@
 {
   "name": "@okx-dex/okx-dex-sdk",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -23,17 +23,17 @@
   "description": "OKX DEX SDK",
   "dependencies": {
     "@mysten/sui": "^1.20.0",
-    "@okxweb3/coin-ethereum": "^1.0.12",
-    "@okxweb3/coin-sui": "^1.1.0",
-    "@solana/web3.js": "^1.98.0",
+    "@okxweb3/coin-ethereum": "^1.1.1",
+    "@okxweb3/coin-sui": "^1.1.1",
+    "@solana/web3.js": "^1.98.2",
     "@types/bn.js": "^5.1.6",
-    "@types/bs58": "^4.0.4",
-    "bn.js": "^5.2.1",
+    "@types/bs58": "^5.0.0",
+    "bn.js": "^5.2.2",
     "bs58": "^6.0.0",
     "crypto-js": "^4.2.0",
-    "dotenv": "^16.4.7",
-    "typescript": "^5.7.3",
-    "valibot": "^0.36.0",
+    "dotenv": "^16.5.0",
+    "typescript": "^5.8.3",
+    "valibot": "^1.1.0",
     "web3": "^4.16.0"
   },
   "devDependencies": {
