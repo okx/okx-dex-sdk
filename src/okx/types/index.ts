@@ -226,16 +226,30 @@ export interface SlippageOptions {
 // Request params
 export interface BaseParams {
     chainId: string;
+    chainIndex?: string;
     fromTokenAddress: string;
     toTokenAddress: string;
     amount: string;
     userWalletAddress?: string;
+    dexIds?: string;
+    directRoute?: boolean;
+    priceImpactProtectionPercentage?: string;
+    feePercent?: string;
 }
 
 export interface SwapParams extends BaseParams {
     slippage?: string;
     autoSlippage?: boolean;
     maxAutoSlippage?: string;
+    swapReceiverAddress?: string;
+    fromTokenReferrerWalletAddress?: string;
+    toTokenReferrerWalletAddress?: string;
+    positiveSlippagePercent?: string;
+    gasLimit?: string;
+    gasLevel?: string;
+    computeUnitPrice?: string;
+    computeUnitLimit?: string;
+    callDataMemo?: string;
 }
 
 export interface QuoteParams extends BaseParams {

@@ -26,7 +26,7 @@ async function main() {
             console.log('Usage: ts-node src/examples/solana-swap.ts <amount> <fromTokenAddress> <toTokenAddress>');
             console.log('\nExamples:');
             console.log('  # Swap 0.1 SOL to USDC');
-            console.log('  ts-node src/examples/solana-swap.ts 0.1 So11111111111111111111111111111111111111112 EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v');
+            console.log('  ts-node src/examples/solana-swap.ts 0.1 11111111111111111111111111111111 EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v');
             process.exit(1);
         }
 
@@ -58,7 +58,9 @@ async function main() {
             fromTokenAddress,
             toTokenAddress,
             amount: '1000000', // Small amount for quote
-            slippage: '0.5'
+            slippage: '0.2',
+            dexIds: '277',
+            feePercent: '5'
         });
 
         const tokenInfo = {
@@ -92,8 +94,11 @@ async function main() {
             fromTokenAddress,
             toTokenAddress,
             amount: rawAmount,
-            slippage: '0.5',
-            userWalletAddress: process.env.SOLANA_WALLET_ADDRESS
+            slippage: '0.2',
+            userWalletAddress: process.env.SOLANA_WALLET_ADDRESS,
+            // fromTokenReferrerWalletAddress: '',
+            // toTokenReferrerWalletAddress: '',
+            feePercent: '5'
         });
 
         console.log("\nSwap completed successfully!");
