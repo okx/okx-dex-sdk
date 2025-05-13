@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 // Import the function directly to avoid require
 import { toBaseUnits } from '../src/okx/examples/evm/evm-approve';
 
+// Load environment variables first
 dotenv.config();
 
 // Increase timeout for all tests
@@ -37,17 +38,24 @@ describe('EVM Examples Tests', () => {
   const WETH_ADDRESS = '0x4200000000000000000000000000000000000006';
 
   beforeAll(() => {
+    if (!process.env.EVM_RPC_URL) {
+      throw new Error('EVM_RPC_URL environment variable is required');
+    }
+    if (!process.env.EVM_WALLET_ADDRESS) {
+      throw new Error('EVM_WALLET_ADDRESS environment variable is required');
+    }
+    if (!process.env.EVM_PRIVATE_KEY) {
+      throw new Error('EVM_PRIVATE_KEY environment variable is required');
+    }
+
     client = new OKXDexClient({
       apiKey: process.env.OKX_API_KEY!,
       secretKey: process.env.OKX_SECRET_KEY!,
       apiPassphrase: process.env.OKX_API_PASSPHRASE!,
       projectId: process.env.OKX_PROJECT_ID!,
       evm: {
-        connection: {
-          rpcUrl: process.env.EVM_RPC_URL!,
-        },
-        walletAddress: process.env.EVM_WALLET_ADDRESS!,
-        privateKey: process.env.EVM_PRIVATE_KEY!,
+        walletAddress: process.env.EVM_WALLET_ADDRESS,
+        privateKey: process.env.EVM_PRIVATE_KEY
       }
     });
   });

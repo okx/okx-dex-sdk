@@ -157,12 +157,23 @@ export interface SolanaConfig {
 }
 
 export interface SuiConfig {
-    wallet: Wallet;
+    privateKey: string;
+    walletAddress: string;
+    connection?: {
+        rpcUrl: string;
+        wsEndpoint?: string;
+    };
 }
 
 // src/types.ts
 export interface EVMConfig {
-    wallet: Wallet;
+    walletAddress: string;
+    privateKey: string;
+    gasMultiplier?: number;
+    connection?: {
+        rpcUrl: string;
+        wsEndpoint?: string;
+    };
 }
 
 // Add configuration interfaces for chain-specific settings

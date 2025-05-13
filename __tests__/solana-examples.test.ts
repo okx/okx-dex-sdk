@@ -1,6 +1,9 @@
 import { OKXDexClient } from '../src/okx/index';
 import dotenv from 'dotenv';
+import { Connection } from '@solana/web3.js';
+import { createWallet } from '../src/okx/core/wallet';
 
+// Load environment variables first
 dotenv.config();
 
 // Increase timeout but not too much
@@ -26,25 +29,32 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries = 3): Promise<T> {
   throw new Error('Max retries exceeded');
 }
 
-// Use describe.parallel if available in your Jest version
 describe('Solana Examples Tests', () => {
   let client: OKXDexClient;
+  let connection: Connection;
+  let wallet: ReturnType<typeof createWallet>;
   const chainId = '501'; // Solana mainnet
   const USDC_ADDRESS = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
   const SOL_ADDRESS = 'So11111111111111111111111111111111111111112';
 
   beforeAll(() => {
+    if (!process.env.SOLANA_RPC_URL) {
+      throw new Error('SOLANA_RPC_URL environment variable is required');
+    }
+    if (!process.env.SOLANA_PRIVATE_KEY) {
+      throw new Error('SOLANA_PRIVATE_KEY environment variable is required');
+    }
+
+    connection = new Connection(process.env.SOLANA_RPC_URL);
+    wallet = createWallet(process.env.SOLANA_PRIVATE_KEY, connection);
+
     client = new OKXDexClient({
       apiKey: process.env.OKX_API_KEY!,
       secretKey: process.env.OKX_SECRET_KEY!,
       apiPassphrase: process.env.OKX_API_PASSPHRASE!,
       projectId: process.env.OKX_PROJECT_ID!,
       solana: {
-        connection: {
-          rpcUrl: process.env.SOLANA_RPC_URL!,
-        },
-        walletAddress: process.env.SOLANA_WALLET_ADDRESS!,
-        privateKey: process.env.SOLANA_PRIVATE_KEY!,
+        wallet: wallet
       }
     });
   });
