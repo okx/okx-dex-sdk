@@ -86,6 +86,22 @@ export interface QuoteData {
     tx?: TransactionData;
 }
 
+// Liquidity source response structure
+export interface LiquidityData {
+    id: string;
+    name: string;
+    logo: string;
+}
+
+// Token list response structure
+export interface TokenData {
+    decimals: string;
+    tokenContractAddress: string;
+    tokenLogoUrl: string;
+    tokenName: string;
+    tokenSymbol: string;
+}
+
 export interface ChainData {
     chainId: string;
     chainName: string;

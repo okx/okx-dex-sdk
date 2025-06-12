@@ -14,6 +14,8 @@ import {
     ChainData,
     ApproveTokenParams,
     SwapSimulationParams,
+    LiquidityData,
+    TokenData,
 } from "../types";
 import { SwapExecutorFactory } from "./swap/factory";
 import CryptoJS from "crypto-js";
@@ -266,7 +268,7 @@ export class DexAPI {
         }
 
         return apiParams;
-    }    
+    }
 
     async getQuote(params: QuoteParams): Promise<APIResponse<QuoteData>> {
         return this.client.request(
@@ -276,7 +278,7 @@ export class DexAPI {
         );
     }
 
-    async getLiquidity(chainId: string): Promise<APIResponse<QuoteData>> {
+    async getLiquidity(chainId: string): Promise<APIResponse<LiquidityData>> {
         return this.client.request(
             "GET",
             "/api/v5/dex/aggregator/get-liquidity",
@@ -322,7 +324,7 @@ export class DexAPI {
         );
     }
 
-    async getTokens(chainId: string): Promise<APIResponse<QuoteData>> {
+    async getTokens(chainId: string): Promise<APIResponse<TokenData>> {
         return this.client.request(
             "GET",
             "/api/v5/dex/aggregator/all-tokens",
@@ -347,28 +349,28 @@ export class DexAPI {
         try {
             // Get network configuration
             const networkConfig = this.getNetworkConfig(params.chainId);
-            
+
             // Get the DEX approval address from supported chains
             const chainsData = await this.getChainData(params.chainId);
             const dexTokenApproveAddress = chainsData.data?.[0]?.dexTokenApproveAddress;
             if (!dexTokenApproveAddress) {
                 throw new Error(`No dex contract address found for chain ${params.chainId}`);
             }
-            
+
             // Create the approve executor
             const executor = SwapExecutorFactory.createApproveExecutor(
-                params.chainId, 
-                this.config, 
+                params.chainId,
+                this.config,
                 networkConfig
             );
-            
+
             // Execute approval with the contract address from supported chains
             const result = await executor.handleTokenApproval(
                 params.chainId,
                 params.tokenContractAddress,
                 params.approveAmount,
             );
-            
+
             // Return formatted result
             return {
                 transactionHash: result.transactionHash,
