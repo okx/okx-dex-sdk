@@ -260,9 +260,9 @@ export interface SwapParams extends BaseParams {
 }
 
 export interface SwapSimulationParams {
-    chainIndex: string;
     fromAddress: string;
     toAddress: string;
+    chainIndex: string;
     txAmount: string;
     extJson: {
         inputData: string;

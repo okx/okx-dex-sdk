@@ -26,26 +26,25 @@ async function main() {
       chainId: '8453',
       fromTokenAddress: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE', // ETH address
       toTokenAddress: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', // USDC address
-      amount: String(10 ** 18 * 0.0001),
+      amount: String(10 ** 18 * 0.001),
       slippage: '0.005',
       userWalletAddress: walletAddress,
       fromTokenReferrerWalletAddress: walletAddress,
-      feePercent: '0.0001'
+      feePercent: '0.001'
     });
 
     console.log('Got swap data:', JSON.stringify(swapData, null, 2));
 
     // Use the swap data to simulate the transaction
-    const routerResult = swapData.data[0].routerResult;
     const params = {
-      chainIndex: '8453', // Solana chain ID
+      chainIndex: '8453', // Base chain ID
       fromAddress: swapData.data[0].tx?.from || walletAddress,
       toAddress: swapData.data[0].tx?.to || '',
-      txAmount: routerResult.fromTokenAmount,
+      txAmount: swapData.data[0].tx?.value || '0',
       extJson: {
         inputData: swapData.data[0].tx?.data || ''
       },
-      gasPrice: swapData.data[0].tx?.gasPrice || '2684116547',
+      gasPrice: swapData.data[0].tx?.gasPrice || '2734795',
       includeDebug: true
     };
 

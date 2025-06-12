@@ -29,8 +29,8 @@ export function getHeaders(timestamp: string, method: string, requestPath: strin
 interface SimulationRequest {
   fromAddress: string;
   toAddress: string;
-  txAmount: string;
   chainIndex: string;
+  txAmount: string;
   extJson: {
     inputData: string;
   };
@@ -45,12 +45,12 @@ async function main() {
     const params: SimulationRequest = {
       fromAddress: "27tEZNjf3GbHisbkzpW75UR1QPjfXjRPoUQxVysogErk",
       toAddress: "6m2CDdhRgxpH4WjvdzxAYbGxwdGUz5MziiL5jek2kBma",
-      txAmount: "1000000",
       chainIndex: "501", // Solana
+      txAmount: "10000000",
       extJson: {
-        inputData: "WjmYkW1BXPMfiYVEJc5HrQRkVFPzi7FP4FLAGjf5ekoTr63vX8ibzrptKpqVpqmffbovMFZXA59uwPyJ5HxC2cQQJJDh4DucTQKCCkLSnfXqKcjDdaGR7CRo3zQtB7D7iZmF3Qejo6dcmWRvwsGggry12Nneq5DtHZuQh39XzDa7v8YEDjVSwe9txPFAr396LPLG1a4Y8DYbr5CZ4Ky54LMd3g5Rqz2X8vDnULFWpVk3cFiv6CknuUegWN7h9VBJFazYFYfpg4k3PNfNhbLRp3inD6HubrkLB3FzKScdRrKvpr2xxdEUxBgnVvPGxXMgzj3YzX7hHd4P4QJCbDQN7AgQiWmtZFd4upkBHScAeDz9ZtL4Wa3fQYxu95SwqeEZtdFnagDnDpaEeLy7TvazMmDXi7DtXtJxmszgiJmqx3TJrcxUvsfyLyYdfqveASxCz8sN4CpCtkxWcom8ePzq85eJ6VjtsjskLFCr3sWqJSn3p3qanD4x8ejZtoxHU4gdJenaw1nE7VhnXt3Q3ZkgCxgT3AnKRvJS9dcFFXCyGfCCmW89XFfSumoq9vC6JkTExqa4CoTWG7qUnGxdqfbyxPmiwT1TqDDev4xk6eu8DH1TeaK2FCa47A8Go6tHSuviGHm5HFsRkjXxWkJp3P5YkW9yS2xLBdR5zGZPFb74wH5dcsYhXtbdTPZeW4WHfNDAoE8QbcAwqGAq5L8D"
+        inputData: "3N3k28gmMcvtJNPpLPWz4SKuaLxWproF88FnkhpCcYWtf8kQU7eekYtVt2jcfuMVJqUMoJdefLr5FR2eyBokpmo6Kqu6hVV7YqysiY19nTKdk9GB3r2jkwZcPXR7aD6fyfWVhcQ9dm2VCD5gDMXQHwFNheLwUJ33sFqmGBtDseF2Rk4Z1xXnMastTc4ECZVUT5jpzgF78Wu4Q19QCGVRVfeeJCUXaaptrSCUuzRw6t25qMnJRyWykbSDXz5XsSefzRZ1eTfkBjLBEp4ndGXDApfJEA7ry3EKo3ydz7qe1CS5pQnyJKCgjRehSeGXVy3cBxZQW49eUkWcatvhvC7hGGt6YXG2MyZ8dcPwtaUFazpPDbWGMZ479yDu54h6WiNKZRznYuuzfu1pyMqAFeRQCBdkZedJS7eJXiXQseBuY2upLNkP1kCfWuRR7kpTQvpHL61jaLxA9QtWCsRJEQV8T4KXH4aXYgXLLA1BXZXi7ApVsfzoNhxQj8zvbGmiYUegL6ePL4WT6bFzCMFeZBvyriNbYhfGr7QSrY8PKF4hmD8nNkaob5hKdUzwGDpLyna8XocsoouGVfeFmorT6HygoSGPyztqUZTvEy7Hf4CDgs7zR9Zt7n8G7W4ezHJeeNKzdpnpsbXjnP5mrbWXPfBmsbFnJ2m2UtubVk77eDXwoqLkL7XYExQ1QHHL9vGvvD8roFxhKPBsFJ7voWZFrRhBnYGXaX8DR8bs4NJp1ytJMnj2ZwaM3KHMoKbvNTmypiWn2S5JycCSQYkyJEufMYtH9xB3N9DQsD8AkjjhhRDoeiJkFZ3qaDxqEWTounAZeeCCguVjVrXPRuMwnkrpkxqhuhM3NssRfbtafL6Jxwq7mWwTMgpwhv6ras6ph3n5sMTnxdFF6a9sEPWqbTwPf6tBNQNxuCxAb4TGQyzDU4euAAsM21SnExQsLTdmncBXskfcwEwgsYU1fZ9nr8E8kwKnTUL4LxEJM1nygV7ZUKPQ4hrqvHc8BeK8a25SRDvAndStP6hhfEuLYfwA9CJ2vJ6NK4bViu2BRyDBfXej4CsbXtLnzC45eRU4AG5JaUG3KoSehkgMHJXwBNm2hR5ThR98VFe186ear2EfJCxY4Yrf3f21rJFxTXNy1Nre2dmnyC6B2ZSSdS8"
       },
-      gasPrice: "84557000000000",
+      gasPrice: "81673000000000",
       includeDebug: true // Enable debug information
     };
 
@@ -91,12 +91,12 @@ async function main() {
         console.log('\n✅ Transaction would succeed!');
       }
       
-      console.log('\nAsset Changes:');
-      simData.assetChange.forEach((asset: any) => {
-        const direction = asset.rawValue.startsWith('-') ? 'SEND' : 'RECEIVE';
-        const assetSymbol = asset.symbol || 'Unknown';
-        console.log(`${direction}: ${assetSymbol} (${asset.assetType})`);
-      });
+      // console.log('\nAsset Changes:');
+      // simData.assetChange.forEach((asset: any) => {
+      //   const direction = asset.rawValue.startsWith('-') ? 'SEND' : 'RECEIVE';
+      //   const assetSymbol = asset.symbol || 'Unknown';
+      //   console.log(`${direction}: ${assetSymbol} (${asset.assetType})`);
+      // });
       
       if (simData.risks && simData.risks.length > 0) {
         console.log('\n⚠️ Risks Detected:');

@@ -30,6 +30,8 @@ interface SimulationResult {
         symbol: string;
         type: string;
         amount: string;
+        decimals: number;
+        address: string;
     }>;
     risks: Array<{
         addressType: string;
@@ -423,10 +425,12 @@ export class DexAPI {
             error: simData.failReason,
             logs: simData.debug,
             assetChanges: simData.assetChange?.map((asset: any) => ({
-                direction: asset.rawValue.startsWith('-') ? 'SEND' : 'RECEIVE',
+                direction: asset.rawVaule.startsWith('-') ? 'SEND' : 'RECEIVE',
                 symbol: asset.symbol || 'Unknown',
                 type: asset.assetType,
-                amount: asset.rawValue
+                amount: asset.rawVaule,
+                decimals: asset.decimals,
+                address: asset.address
             })) || [],
             risks: simData.risks || []
         };

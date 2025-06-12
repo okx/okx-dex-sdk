@@ -27,7 +27,7 @@ async function main() {
       chainId: '501',
       fromTokenAddress: 'So11111111111111111111111111111111111111112',
       toTokenAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-      amount: '1000000',
+      amount: '10000000', // 0.01 SOL in lamports
       slippage: '0.05',
       userWalletAddress: walletAddress,
       fromTokenReferrerWalletAddress: walletAddress,
@@ -37,36 +37,43 @@ async function main() {
     console.log('Got swap data:', JSON.stringify(swapData, null, 2));
 
     // Use the swap data to simulate the transaction
+    const tx = swapData.data[0].tx;
     const routerResult = swapData.data[0].routerResult;
+    if (!tx || !routerResult) {
+      throw new Error('No transaction data received from swap');
+    }
     const params = {
-      chainIndex: '501', // Solana chain ID
-      fromAddress: swapData.data[0].tx?.from || walletAddress,
-      toAddress: swapData.data[0].tx?.to || '',
+      fromAddress: tx.from,
+      toAddress: tx.to,
+      chainIndex: '501', // Solana chain ID,
       txAmount: routerResult.fromTokenAmount,
       extJson: {
-        inputData: swapData.data[0].tx?.data || ''
+        inputData: tx.data
       },
-      gasPrice: routerResult.estimateGasFee,
+      gasPrice: tx.gasPrice,
       includeDebug: true
     };
 
     console.log('Simulating transaction...');
+    // Add a 1 second delay
     const result = await client.dex.simulateTransaction(params);
     
     console.log('\nTransaction Summary:');
     console.log(`Success: ${result.success}`);
-    console.log(`Gas Used: ${result.gasUsed || 'N/A'}`);
+    console.log(`Gas Used: ${result.gasUsed}`);
     
-    if (!result.success) {
+    if (result.error) {
       console.log(`\n❌ Transaction would fail! Reason: ${result.error}`);
     } else {
       console.log('\n✅ Transaction would succeed!');
     }
     
-    console.log('\nAsset Changes:');
-    result.assetChanges.forEach(asset => {
-      console.log(`${asset.direction}: ${asset.symbol} (${asset.type}) - ${asset.amount}`);
-    });
+    if (result.assetChanges.length > 0) {
+      console.log('\nAsset Changes:');
+      result.assetChanges.forEach(asset => {
+        console.log(`${asset.direction}: ${asset.amount} ${asset.symbol} (${asset.type})`);
+      });
+    }
     
     if (result.risks.length > 0) {
       console.log('\n⚠️ Risks Detected:');
