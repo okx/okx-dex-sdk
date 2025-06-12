@@ -12,7 +12,7 @@ export class OKXDexClient {
 
     constructor(config: OKXConfig) {
         this.config = {
-            baseUrl: "https://www.okx.com",
+            baseUrl: "https://web3.okx.com",
             maxRetries: 3,
             timeout: 30000,
             ...config,

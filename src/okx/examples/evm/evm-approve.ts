@@ -1,6 +1,11 @@
 // src/examples/evm/evm-approve.ts
 import { OKXDexClient } from '../../index';
 import 'dotenv/config';
+import { ethers } from 'ethers';
+import { createEVMWallet } from '../../core/evm-wallet';
+
+const provider = new ethers.JsonRpcProvider(process.env.EVM_RPC_URL!);
+const wallet = createEVMWallet(process.env.EVM_PRIVATE_KEY!, provider);
 
 const chainId = '8453';
 
@@ -64,11 +69,7 @@ async function main() {
             apiPassphrase: process.env.OKX_API_PASSPHRASE!,
             projectId: process.env.OKX_PROJECT_ID!,
             evm: {
-                connection: {
-                    rpcUrl: process.env.EVM_RPC_URL!,
-                },
-                walletAddress: process.env.EVM_WALLET_ADDRESS!,
-                privateKey: process.env.EVM_PRIVATE_KEY!,
+                wallet: wallet
             }
         });
 

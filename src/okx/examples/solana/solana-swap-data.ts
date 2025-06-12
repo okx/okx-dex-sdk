@@ -26,10 +26,11 @@ async function main() {
             chainId: '501',
             fromTokenAddress: 'So11111111111111111111111111111111111111112',
             toTokenAddress: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-            amount: '1000000000',
-            slippage: '0.1',
+            amount: '1000000',
+            slippage: '0.05',
             userWalletAddress: walletAddress,
-            feePercent: '2'
+            fromTokenReferrerWalletAddress: walletAddress,
+            feePercent: '0.0001'
         });
         console.log('Swap Quote:', JSON.stringify(quote, null, 2));
     } catch (error) {

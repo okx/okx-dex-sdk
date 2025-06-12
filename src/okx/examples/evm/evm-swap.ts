@@ -1,12 +1,17 @@
 // src/examples/xlayer-swap.ts
+import { createEVMWallet } from '../../core/evm-wallet';
 import { OKXDexClient } from '../../index';
 import 'dotenv/config';
+import { ethers } from 'ethers';
 
 // Token list (helper)
 const TOKENS = {
     NATIVE: "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE", // Native X Layer token
     USDC: "0x74b7f16337b8972027f6196a17a631ac6de26d22"  // USDC on X Layer
 } as const;
+
+const provider = new ethers.JsonRpcProvider(process.env.EVM_RPC_URL!);
+const wallet = createEVMWallet(process.env.EVM_PRIVATE_KEY!, provider);
 
 // Validate environment variables
 const requiredEnvVars = [
@@ -45,11 +50,7 @@ async function main() {
             apiPassphrase: process.env.OKX_API_PASSPHRASE!,
             projectId: process.env.OKX_PROJECT_ID!,
             evm: {
-                connection: {
-                    rpcUrl: process.env.EVM_RPC_URL!,
-                },
-                walletAddress: process.env.EVM_WALLET_ADDRESS!,
-                privateKey: process.env.EVM_PRIVATE_KEY!,
+                wallet: wallet
             }
         });
 
@@ -64,7 +65,7 @@ async function main() {
             fromTokenAddress,
             toTokenAddress,
             amount: quoteAmount,
-            slippage: '0.5'
+            slippage: '0.05'
         });
 
 
@@ -96,11 +97,13 @@ async function main() {
         console.log("\nExecuting swap...");
         const result = await client.dex.executeSwap({
             chainId: '8453',
-            fromTokenAddress,
-            toTokenAddress,
-            amount: rawAmount,
-            slippage: '0.5',
-            userWalletAddress: process.env.EVM_WALLET_ADDRESS
+            fromTokenAddress: fromTokenAddress, // WETH
+            toTokenAddress: toTokenAddress, // USDC
+            amount: rawAmount, // 0.0001 WETH
+            slippage: '0.05',
+            userWalletAddress: wallet.address,
+            fromTokenReferrerWalletAddress: wallet.address,
+            feePercent: '0.0001'
         });
 
         console.log("\nSwap completed successfully!");

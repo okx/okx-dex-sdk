@@ -1,6 +1,8 @@
 import { OKXDexClient } from '../src/okx/index';
 import { TokenInfo } from '../src/okx/types';
 import dotenv from 'dotenv';
+import { ethers } from 'ethers';
+import { createEVMWallet } from '../src/okx/core/evm-wallet';
 
 // Import the function directly to avoid require
 import { toBaseUnits } from '../src/okx/examples/evm/evm-approve';
@@ -48,17 +50,16 @@ describe('EVM Examples Tests', () => {
       throw new Error('EVM_PRIVATE_KEY environment variable is required');
     }
 
+    const provider = new ethers.JsonRpcProvider(process.env.EVM_RPC_URL!);
+    const wallet = createEVMWallet(process.env.EVM_PRIVATE_KEY!, provider);
+
     client = new OKXDexClient({
       apiKey: process.env.OKX_API_KEY!,
       secretKey: process.env.OKX_SECRET_KEY!,
       apiPassphrase: process.env.OKX_API_PASSPHRASE!,
       projectId: process.env.OKX_PROJECT_ID!,
       evm: {
-        connection: {
-          rpcUrl: process.env.EVM_RPC_URL!,
-        },
-        walletAddress: process.env.EVM_WALLET_ADDRESS!,
-        privateKey: process.env.EVM_PRIVATE_KEY!,
+        wallet: wallet
       }
     });
   });
@@ -258,17 +259,16 @@ describe('EVM Examples Tests', () => {
     });
 
     it('should handle network errors gracefully', async () => {
+      const provider = new ethers.JsonRpcProvider('https://invalid-rpc-url');
+      const wallet = createEVMWallet(process.env.EVM_PRIVATE_KEY!, provider);
+
       const clientWithInvalidRPC = new OKXDexClient({
         apiKey: process.env.OKX_API_KEY!,
         secretKey: process.env.OKX_SECRET_KEY!,
         apiPassphrase: process.env.OKX_API_PASSPHRASE!,
         projectId: process.env.OKX_PROJECT_ID!,
         evm: {
-          connection: {
-            rpcUrl: 'https://invalid-rpc-url',
-          },
-          walletAddress: process.env.EVM_WALLET_ADDRESS!,
-          privateKey: process.env.EVM_PRIVATE_KEY!,
+          wallet: wallet
         }
       });
 

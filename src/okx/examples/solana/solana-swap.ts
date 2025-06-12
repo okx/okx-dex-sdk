@@ -57,7 +57,7 @@ async function main() {
             fromTokenAddress,
             toTokenAddress,
             amount: '100000000',
-            slippage: '0.5',
+            slippage: '0.005',
         });
 
         const tokenInfo = {
@@ -91,7 +91,7 @@ async function main() {
             fromTokenAddress,
             toTokenAddress,
             amount: rawAmount,
-            slippage: '0.2',
+            slippage: '0.005',
             userWalletAddress: wallet.publicKey.toString(),
         });
 

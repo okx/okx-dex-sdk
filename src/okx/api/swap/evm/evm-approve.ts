@@ -1,5 +1,5 @@
 // src/api/swap/evm/evm-approve.ts
-import Web3 from "web3";
+import { ethers } from "ethers";
 import { SwapExecutor } from "../types";
 import { SwapParams, SwapResponseData, SwapResult, ChainConfig, OKXConfig, APIResponse, ChainData } from "../../../types";
 import { HTTPClient } from "../../../core/http-client";
@@ -29,18 +29,18 @@ const ERC20_ABI = [
 ];
 
 export class EVMApproveExecutor implements SwapExecutor {
-    private readonly web3: Web3;
-    private readonly DEFAULT_GAS_MULTIPLIER = BigInt(3) / BigInt(2); // 1.5x
+    private readonly provider: ethers.Provider;
+    private readonly DEFAULT_GAS_MULTIPLIER = BigInt(150); // 1.5x
     private readonly httpClient: HTTPClient;
 
     constructor(
         private readonly config: OKXConfig,
         private readonly networkConfig: ChainConfig
     ) {
-        if (!this.config.evm) {
+        if (!this.config.evm?.wallet) {
             throw new Error("EVM configuration required");
         }
-        this.web3 = new Web3(this.config.evm.connection?.rpcUrl || '');
+        this.provider = this.config.evm.wallet.provider;
         this.httpClient = new HTTPClient(this.config);
     }
 
@@ -49,9 +49,9 @@ export class EVMApproveExecutor implements SwapExecutor {
     }
 
     private async getAllowance(tokenAddress: string, ownerAddress: string, spenderAddress: string): Promise<bigint> {
-        const tokenContract = new this.web3.eth.Contract(ERC20_ABI as any, tokenAddress);
-        const allowanceResult: string = await tokenContract.methods.allowance(ownerAddress, spenderAddress).call();
-        return BigInt(allowanceResult);
+        const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, this.provider);
+        const allowanceResult = await tokenContract.allowance(ownerAddress, spenderAddress);
+        return allowanceResult;
     }
 
     async handleTokenApproval(
@@ -59,8 +59,8 @@ export class EVMApproveExecutor implements SwapExecutor {
         tokenAddress: string,
         amount: string
     ): Promise<{ transactionHash: string }> {
-        if (!this.config.evm?.walletAddress) {
-            throw new Error("Wallet address not configured");
+        if (!this.config.evm?.wallet) {
+            throw new Error("EVM wallet required");
         }
 
         const dexContractAddress = await this.getDexContractAddress(chainId);
@@ -68,7 +68,7 @@ export class EVMApproveExecutor implements SwapExecutor {
         // Check current allowance
         const currentAllowance = await this.getAllowance(
             tokenAddress,
-            this.config.evm.walletAddress,
+            this.config.evm.wallet.address,
             dexContractAddress
         );
 
@@ -84,7 +84,7 @@ export class EVMApproveExecutor implements SwapExecutor {
                 amount
             );
             
-            return { transactionHash: result.transactionHash.toString() };
+            return { transactionHash: result.hash };
         } catch (error) {
             console.error("Approval execution failed:", error);
             throw error;
@@ -115,52 +115,24 @@ export class EVMApproveExecutor implements SwapExecutor {
         spenderAddress: string, 
         amount: string
     ) {
-        if (!this.config.evm?.privateKey || !this.config.evm?.walletAddress) {
-            throw new Error("EVM private key and wallet address required");
+        if (!this.config.evm?.wallet) {
+            throw new Error("EVM wallet required");
         }
 
-        // Prepare approval data
-        const approvalCallData = this.web3.eth.abi.encodeFunctionCall({
-            name: 'approve',
-            type: 'function',
-            inputs: [
-                { type: 'address', name: '_spender' },
-                { type: 'uint256', name: '_value' }
-            ]
-        }, [spenderAddress, amount]);
+        const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, this.config.evm.wallet);
 
         let retryCount = 0;
         while (retryCount < (this.networkConfig.maxRetries || 3)) {
             try {
-                const nonce = await this.web3.eth.getTransactionCount(this.config.evm.walletAddress, 'latest');
-                const gasPrice = await this.web3.eth.getGasPrice();
-                
-                // Estimate gas
-                const estimate = await this.web3.eth.estimateGas({
-                    from: this.config.evm.walletAddress,
-                    to: tokenAddress,
-                    data: approvalCallData
-                });
-                const gasLimit = BigInt(estimate) * BigInt(2); // Double to be safe
-
-                const signTransactionParams = {
-                    to: tokenAddress,
-                    data: approvalCallData,
-                    gasPrice: BigInt(gasPrice) * this.DEFAULT_GAS_MULTIPLIER,
-                    gas: gasLimit,
-                    value: '0',
-                    nonce
-                };
-
-                console.log("Signing approval transaction...");
-                const { rawTransaction } = await this.web3.eth.accounts.signTransaction(
-                    signTransactionParams,
-                    this.config.evm.privateKey
-                );
-
                 console.log("Sending approval transaction...");
-                return this.web3.eth.sendSignedTransaction(rawTransaction);
+                const tx = await tokenContract.approve(spenderAddress, amount, {
+                    gasLimit: BigInt(100000), // Safe default for approvals
+                    maxFeePerGas: (await this.provider.getFeeData()).maxFeePerGas! * this.DEFAULT_GAS_MULTIPLIER / BigInt(100),
+                    maxPriorityFeePerGas: (await this.provider.getFeeData()).maxPriorityFeePerGas! * this.DEFAULT_GAS_MULTIPLIER / BigInt(100)
+                });
 
+                console.log("Waiting for transaction confirmation...");
+                return await tx.wait();
             } catch (error) {
                 retryCount++;
                 console.warn(`Approval attempt ${retryCount} failed, retrying in ${2000 * retryCount}ms...`);

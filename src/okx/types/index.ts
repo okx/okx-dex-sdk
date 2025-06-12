@@ -1,4 +1,5 @@
 import { Wallet } from '../core/wallet';
+import { EVMWallet } from '../core/evm-wallet';
 
 // Base token info from API
 export interface TokenInfo {
@@ -167,13 +168,7 @@ export interface SuiConfig {
 
 // src/types.ts
 export interface EVMConfig {
-    walletAddress: string;
-    privateKey: string;
-    gasMultiplier?: number;
-    connection?: {
-        rpcUrl: string;
-        wsEndpoint?: string;
-    };
+    wallet?: EVMWallet;
 }
 
 // Add configuration interfaces for chain-specific settings
@@ -248,6 +243,18 @@ export interface SwapParams extends BaseParams {
     callDataMemo?: string;
 }
 
+export interface SwapSimulationParams {
+    chainIndex: string;
+    fromAddress: string;
+    toAddress: string;
+    txAmount: string;
+    extJson: {
+        inputData: string;
+    };
+    gasPrice: string;
+    includeDebug: boolean;
+}
+
 export interface QuoteParams extends BaseParams {
     slippage: string;
 }
@@ -312,4 +319,3 @@ export interface ApproveTokenResult {
     transactionHash: string;
     explorerUrl: string;
 }
-
