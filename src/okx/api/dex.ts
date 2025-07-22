@@ -16,6 +16,8 @@ import {
     SwapSimulationParams,
     LiquidityData,
     TokenData,
+    GasLimitParams,
+    GasLimitData,
 } from "../types";
 import { SwapExecutorFactory } from "./swap/factory";
 import CryptoJS from "crypto-js";
@@ -434,6 +436,32 @@ export class DexAPI {
             })) || [],
             risks: simData.risks || []
         };
+    }
+
+    async getGasLimit(params: GasLimitParams): Promise<APIResponse<GasLimitData>> {
+        const requestPath = "/api/v5/dex/pre-transaction/gas-limit";
+        const timestamp = new Date().toISOString();
+        const requestBody = JSON.stringify(params);
+        
+        const headers = this.getHeaders(timestamp, "POST", requestPath, requestBody);
+
+        const response = await fetch(`https://web3.okx.com${requestPath}`, {
+            method: "POST",
+            headers,
+            body: requestBody
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}, ${await response.text()}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.code !== "0") {
+            throw new Error(`Gas limit request failed: ${result.msg || 'Unknown error'}`);
+        }
+
+        return result;
     }
 
     private getHeaders(timestamp: string, method: string, requestPath: string, requestBody = "") {

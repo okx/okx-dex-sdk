@@ -335,3 +335,17 @@ export interface ApproveTokenResult {
     transactionHash: string;
     explorerUrl: string;
 }
+
+export interface GasLimitParams {
+    chainIndex: string;
+    fromAddress: string;
+    toAddress: string;
+    txAmount?: string;
+    extJson?: {
+        inputData?: string;
+    };
+}
+
+export interface GasLimitData {
+    gasLimit: string;
+}
