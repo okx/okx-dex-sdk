@@ -18,6 +18,10 @@ import {
     TokenData,
     GasLimitParams,
     GasLimitData,
+    BroadcastTransactionParams,
+    BroadcastTransactionData,
+    TransactionOrdersParams,
+    TransactionOrdersData,
 } from "../types";
 import { SwapExecutorFactory } from "./swap/factory";
 import CryptoJS from "crypto-js";
@@ -459,6 +463,85 @@ export class DexAPI {
         
         if (result.code !== "0") {
             throw new Error(`Gas limit request failed: ${result.msg || 'Unknown error'}`);
+        }
+
+        return result;
+    }
+
+    async broadcastTransaction(params: BroadcastTransactionParams): Promise<APIResponse<BroadcastTransactionData>> {
+        const requestPath = "/api/v5/dex/pre-transaction/broadcast-transaction";
+        const timestamp = new Date().toISOString();
+        
+        // Prepare request body
+        const requestBody: any = {
+            signedTx: params.signedTx,
+            chainIndex: params.chainIndex,
+            address: params.address
+        };
+
+        // Handle extraData for MEV protection and Jito (for Solana)
+        if (params.enableMevProtection || params.jitoSignedTx) {
+            const extraData: any = {};
+            if (params.enableMevProtection) {
+                extraData.enableMevProtection = params.enableMevProtection;
+            }
+            if (params.jitoSignedTx) {
+                extraData.jitoSignedTx = params.jitoSignedTx;
+            }
+            requestBody.extraData = JSON.stringify(extraData);
+        } else if (params.extraData) {
+            requestBody.extraData = params.extraData;
+        }
+
+        const requestBodyString = JSON.stringify(requestBody);
+        const headers = this.getHeaders(timestamp, "POST", requestPath, requestBodyString);
+
+        const response = await fetch(`https://web3.okx.com${requestPath}`, {
+            method: "POST",
+            headers,
+            body: requestBodyString
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}, ${await response.text()}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.code !== "0") {
+            throw new Error(`Broadcast transaction failed: ${result.msg || 'Unknown error'}`);
+        }
+
+        return result;
+    }
+
+    async getTransactionOrders(params: TransactionOrdersParams): Promise<APIResponse<TransactionOrdersData>> {
+        const queryParams = new URLSearchParams();
+        queryParams.append('address', params.address);
+        queryParams.append('chainIndex', params.chainIndex);
+        
+        if (params.txStatus) queryParams.append('txStatus', params.txStatus);
+        if (params.orderId) queryParams.append('orderId', params.orderId);
+        if (params.cursor) queryParams.append('cursor', params.cursor);
+        if (params.limit) queryParams.append('limit', params.limit);
+
+        const requestPath = `/api/v5/dex/post-transaction/orders?${queryParams.toString()}`;
+        const timestamp = new Date().toISOString();
+        const headers = this.getHeaders(timestamp, "GET", requestPath);
+
+        const response = await fetch(`https://web3.okx.com${requestPath}`, {
+            method: "GET",
+            headers
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}, ${await response.text()}`);
+        }
+
+        const result = await response.json();
+        
+        if (result.code !== "0") {
+            throw new Error(`Get transaction orders failed: ${result.msg || 'Unknown error'}`);
         }
 
         return result;

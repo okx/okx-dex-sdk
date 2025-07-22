@@ -349,3 +349,40 @@ export interface GasLimitParams {
 export interface GasLimitData {
     gasLimit: string;
 }
+
+export interface BroadcastTransactionParams {
+    signedTx: string;
+    chainIndex: string;
+    address: string;
+    extraData?: string;
+    enableMevProtection?: boolean;
+    jitoSignedTx?: string; // For Solana only
+}
+
+export interface BroadcastTransactionData {
+    orderId: string;
+    txHash: string;
+}
+
+export interface TransactionOrdersParams {
+    address: string;
+    chainIndex: string;
+    txStatus?: string; // 1: Pending, 2: Success, 3: Failed
+    orderId?: string;
+    cursor?: string;
+    limit?: string;
+}
+
+export interface TransactionOrder {
+    chainIndex: string;
+    orderId: string;
+    address: string;
+    txHash: string;
+    txStatus: string; // API actually uses "txStatus" (camelCase)
+    failReason: string;
+}
+
+export interface TransactionOrdersData {
+    cursor: string;
+    orders: TransactionOrder[];
+}
