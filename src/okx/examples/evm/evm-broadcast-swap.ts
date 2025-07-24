@@ -99,116 +99,19 @@ async function main() {
         console.log('- Order ID:', broadcastResult.data[0].orderId);
         console.log('- Transaction Hash:', broadcastResult.data[0].txHash);
 
-        // Step 4: Track the transaction status
-        console.log('\n4. Tracking transaction status...');
+        // Step 4: Transaction broadcasted successfully
         const orderId = broadcastResult.data[0].orderId;
+        const txHash = broadcastResult.data[0].txHash;
         
-        // Poll for transaction status
-        let attempts = 0;
-        const maxAttempts = 30; // 5 minutes with 10-second intervals
-        
-        while (attempts < maxAttempts) {
-            try {
-                await new Promise(resolve => setTimeout(resolve, 3000)); // Wait 3 seconds
-                
-                // First try to get the specific order
-                let orders = await client.dex.getTransactionOrders({
-                    address: walletAddress,
-                    chainIndex: '8453',
-                    orderId: orderId
-                });
-
-                // If specific order not found, get all recent orders and find ours
-                if (!orders.data.length || !orders.data[0].orders.length) {
-                    console.log(`📊 Status check ${attempts + 1}: Specific order not found, checking recent orders...`);
-                    orders = await client.dex.getTransactionOrders({
-                        address: walletAddress,
-                        chainIndex: '8453',
-                        limit: '20'
-                    });
-                }
-
-                let foundOrder = null;
-                if (orders.data.length > 0 && orders.data[0].orders.length > 0) {
-                    // Look for our specific order ID in the results
-                    foundOrder = orders.data[0].orders.find(order => order.orderId === orderId);
-                    
-                    if (!foundOrder) {
-                        // If not found by orderId, take the most recent order (assuming it's ours)
-                        foundOrder = orders.data[0].orders[0];
-                    }
-                }
-
-                if (foundOrder) {
-                    console.log(`📊 Status check ${attempts + 1}:`);
-                    console.log('- Order ID:', foundOrder.orderId);
-                    console.log('- Status:', getStatusText(foundOrder.txStatus));
-                    console.log('- Transaction Hash:', foundOrder.txHash);
-                    
-                    if (foundOrder.failReason && foundOrder.failReason.trim() !== '') {
-                        console.log('- Failure Reason:', foundOrder.failReason);
-                    }
-
-                    // Check if transaction is complete (success or failed)
-                    if (foundOrder.txStatus === '2') {
-                        console.log('\n🎉 Transaction completed successfully!');
-                        console.log('- Final Transaction Hash:', foundOrder.txHash);
-                        console.log('- Explorer URL:', `https://web3.okx.com/explorer/base/tx/${foundOrder.txHash}`);
-                        break;
-                    } else if (foundOrder.txStatus === '3') {
-                        console.log('\n❌ Transaction failed');
-                        console.log('- Failure Reason:', foundOrder.failReason);
-                        break;
-                    } else {
-                        // Also check the blockchain directly
-                        try {
-                            const receipt = await provider.getTransactionReceipt(foundOrder.txHash);
-                            if (receipt) {
-                                if (receipt.status === 1) {
-                                    console.log('\n🎉 Transaction confirmed on blockchain (success)!');
-                                    console.log('- Block Number:', receipt.blockNumber);
-                                    console.log('- Gas Used:', receipt.gasUsed.toString());
-                                    break;
-                                } else if (receipt.status === 0) {
-                                    console.log('\n❌ Transaction confirmed on blockchain (failed)');
-                                    break;
-                                }
-                            }
-                        } catch (receiptError) {
-                            // Transaction not yet confirmed on blockchain
-                        }
-                    }
-                } else {
-                    console.log(`📊 Status check ${attempts + 1}: Order not found yet, transaction may still be processing...`);
-                }
-                
-                attempts++;
-            } catch (error) {
-                console.error('Error checking transaction status:', error);
-                attempts++;
-            }
-        }
-
-        if (attempts >= maxAttempts) {
-            console.log('\n⏰ Transaction status tracking timed out');
-            console.log('- You can check the status manually using the order ID:', orderId);
-        }
+        console.log('\n✅ Swap transaction has been broadcasted successfully!');
+        console.log('- Order ID:', orderId);
+        console.log('- Transaction Hash:', txHash);
+        console.log('- Explorer URL:', `https://web3.okx.com/explorer/base/tx/${txHash}`);
+        console.log('\n📋 To track this transaction:');
+        console.log(`   npx ts-node src/okx/examples/solana/evm-order-tracking.ts track ${orderId} ${walletAddress} 8453`);
 
     } catch (error) {
         console.error('Error in swap workflow:', error);
-    }
-}
-
-function getStatusText(status: string): string {
-    switch (status) {
-        case '1': return 'Pending';
-        case '2': return 'Success';
-        case '3': return 'Failed';
-        case '0': return 'Submitted';
-        case 'pending': return 'Pending';
-        case 'success': return 'Success';
-        case 'failed': return 'Failed';
-        default: return `Unknown (${status})`;
     }
 }
 
