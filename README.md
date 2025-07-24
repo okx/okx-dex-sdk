@@ -103,6 +103,7 @@ SUI_PRIVATE_KEY=...
 
 ```typescript
 import { OKXDexClient } from '@okx-dex/okx-dex-sdk';
+import { createWallet } from '@okx-dex/okx-dex-sdk/core/solana-wallet';
 import { createEVMWallet } from '@okx-dex/okx-dex-sdk/core/evm-wallet';
 import { ethers } from 'ethers';
 import 'dotenv/config';
@@ -112,7 +113,9 @@ const provider = new ethers.JsonRpcProvider(process.env.EVM_RPC_URL!);
 const evmWallet = createEVMWallet(process.env.EVM_PRIVATE_KEY!, provider);
 
 // For Solana - create wallet instance (implementation may vary)
-const solanaWallet = { /* Solana wallet implementation */ };
+const connection = new Connection(process.env.SOLANA_RPC_URL!);
+const solanaWallet = createWallet(process.env.SOLANA_PRIVATE_KEY!, connection);
+
 
 // Multi-chain client initialization
 const client = new OKXDexClient({
