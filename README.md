@@ -43,6 +43,7 @@ pnpm add @okx-dex/okx-dex-sdk
 | Ethereum | `1` | ✅ | Swap, Quote, Approve, Broadcast |
 | Base | `8453` | ✅ | Swap, Quote, Approve, Broadcast |
 | Polygon | `137` | ✅ | Swap, Quote, Approve, Broadcast |
+| Sonic | `146` | ✅ | Swap, Quote, Approve, Broadcast |
 | Avalanche | `43114` | ✅ | Swap, Quote, Approve, Broadcast |
 | BSC | `56` | ✅ | Swap, Quote, Approve, Broadcast |
 | Arbitrum | `42161` | ✅ | Swap, Quote, Approve, Broadcast |
