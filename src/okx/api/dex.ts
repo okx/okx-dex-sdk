@@ -88,6 +88,14 @@ export class DexAPI {
             confirmationTimeout: 60000,
             maxRetries: 3,
         },
+        "146": { // Sonic Mainnet
+            id: "146",
+            explorer: "https://web3.okx.com/explorer/sonic/tx",
+            defaultSlippage: "0.005",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },     
         "8453": { // Base Mainnet
             id: "8453",
             explorer: "https://web3.okx.com/explorer/base/tx",
