@@ -386,3 +386,31 @@ export interface TransactionOrdersData {
     cursor: string;
     orders: TransactionOrder[];
 }
+
+export interface SolanaInstructionAccount {
+    isSigner: boolean;
+    isWritable: boolean;
+    pubkey: string;
+}
+
+export interface SolanaInstructionItem {
+    data: string; // base64
+    accounts: SolanaInstructionAccount[];
+    programId: string;
+}
+
+export interface SolanaSwapInstructionData {
+    addressLookupTableAccount: string[];
+    instructionLists: SolanaInstructionItem[];
+    routerResult: RouterResult & {
+        chainIndex?: string;
+        contextSlot?: number;
+    };
+    tx: {
+        from: string;
+        minReceiveAmount: string;
+        slippage: string;
+        to: string;
+        [key: string]: any;
+    };
+}

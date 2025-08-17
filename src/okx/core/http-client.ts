@@ -1,4 +1,4 @@
-import CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 import { OKXConfig } from '../types';
 
 class APIError extends Error {

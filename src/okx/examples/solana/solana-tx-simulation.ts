@@ -1,5 +1,5 @@
 // scripts/evm-simulation.ts
-import CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 import dotenv from 'dotenv';
 
 dotenv.config();

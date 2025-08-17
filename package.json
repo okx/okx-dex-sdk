@@ -30,7 +30,8 @@
     "example:ton-quote": "npx ts-node src/okx/examples/ton/ton-quote.ts",
     "example:ton-swap": "npx ts-node src/okx/examples/ton/ton-swap.ts",
     "example:tron-quote": "npx ts-node src/okx/examples/tron/tron-quote.ts",
-    "example:tron-swap": "npx ts-node src/okx/examples/tron/tron-swap.ts"
+    "example:tron-swap": "npx ts-node src/okx/examples/tron/tron-swap.ts",
+    "example:solana-instruction": "npx ts-node src/okx/examples/solana/solana-instruction.ts"
   },
   "keywords": [
     "okx",
@@ -51,7 +52,7 @@
     "bn.js": "^5.2.2",
     "bs58": "^6.0.0",
     "crypto-js": "^4.2.0",
-    "dotenv": "^16.5.0",
+    "dotenv": "^16.6.1",
     "ethers": "^6.14.3",
     "typescript": "^5.8.3",
     "valibot": "^1.1.0",
