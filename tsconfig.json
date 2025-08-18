@@ -8,6 +8,9 @@
     "strict": true,
     "esModuleInterop": true
   },
+  "ts-node": {
+    "preferTsExts": true
+  },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

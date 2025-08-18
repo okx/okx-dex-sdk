@@ -24,7 +24,8 @@ import {
     TransactionOrdersData,
 } from "../types";
 import { SwapExecutorFactory } from "./swap/factory";
-import CryptoJS from "crypto-js";
+import * as CryptoJS from "crypto-js";
+import { SolanaInstructionExecutor } from "./swap/solana/solana-instruction";
 
 interface SimulationResult {
     success: boolean;
@@ -338,6 +339,41 @@ export class DexAPI {
             "/api/v5/dex/aggregator/all-tokens",
             this.toAPIParams({ chainId })
         );
+    }
+
+    async getSolanaSwapInstruction(params: SwapParams): Promise<APIResponse<import("../types").SolanaSwapInstructionData>> {
+        if (!params.slippage && !params.autoSlippage) {
+            throw new Error("Either slippage or autoSlippage must be provided");
+        }
+        if (params.slippage) {
+            const slippageValue = parseFloat(params.slippage);
+            if (isNaN(slippageValue) || slippageValue < 0 || slippageValue > 1) {
+                throw new Error("Slippage must be between 0 and 1");
+            }
+        }
+        if (params.autoSlippage && !params.maxAutoSlippage) {
+            throw new Error("maxAutoSlippageBps must be provided when autoSlippage is enabled");
+        }
+        return this.client.request(
+            "GET",
+            "/api/v5/dex/aggregator/swap-instruction",
+            this.toAPIParams(params)
+        );
+    }
+
+    async executeSolanaSwapInstructions(params: SwapParams): Promise<SwapResult> {
+        const instructionResp = await this.getSolanaSwapInstruction(params);
+        const respAny: any = instructionResp as any;
+        const instructionData = Array.isArray(respAny?.data) ? respAny.data[0] : respAny?.data;
+        if (!instructionData) {
+            throw new Error("Empty instruction data from API");
+        }
+        const networkConfig = this.getNetworkConfig(params.chainId);
+        if (!this.config.solana?.wallet) {
+            throw new Error("Solana wallet configuration required");
+        }
+        const executor = new SolanaInstructionExecutor(this.config, networkConfig);
+        return executor.executeInstructions(instructionData);
     }
 
     async executeSwap(params: SwapParams): Promise<SwapResult> {
