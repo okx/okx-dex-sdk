@@ -15,6 +15,7 @@ export class SwapExecutorFactory {
             case "196": // X Layer
             case "1": // Ethereum
             case "137": // Polygon
+            case "146": // Sonic
             case "8453": // Base
             case "10": // Optimism
             case "42161": // Arbitrum
@@ -45,6 +46,7 @@ export class SwapExecutorFactory {
             case "196": // X Layer
             case "1": // Ethereum
             case "137": // Polygon
+            case "146": // Sonic
             case "8453": // Base
             case "10": // Optimism
             case "42161": // Arbitrum
