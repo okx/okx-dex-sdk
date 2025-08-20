@@ -18,6 +18,7 @@ import {
     TokenData,
     GasLimitParams,
     GasLimitData,
+    GasPriceData,
     BroadcastTransactionParams,
     BroadcastTransactionData,
     TransactionOrdersParams,
@@ -96,7 +97,7 @@ export class DexAPI {
             maxSlippage: "1",
             confirmationTimeout: 60000,
             maxRetries: 3,
-        },     
+        },
         "8453": { // Base Mainnet
             id: "8453",
             explorer: "https://web3.okx.com/explorer/base/tx",
@@ -448,7 +449,7 @@ export class DexAPI {
         const requestPath = "/api/v5/dex/pre-transaction/simulate";
         const timestamp = new Date().toISOString();
         const requestBody = JSON.stringify(params);
-        
+
         const headers = this.getHeaders(timestamp, "POST", requestPath, requestBody);
 
         const response = await fetch(`https://web3.okx.com${requestPath}`, {
@@ -462,13 +463,13 @@ export class DexAPI {
         }
 
         const result = await response.json();
-        
+
         if (result.code !== "0" || !result.data || result.data.length === 0) {
             throw new Error(`Simulation failed: ${result.msg || 'Unknown error'}`);
         }
 
         const simData = result.data[0];
-        
+
         return {
             success: !simData.failReason,
             gasUsed: simData.gasUsed,
@@ -490,7 +491,7 @@ export class DexAPI {
         const requestPath = "/api/v5/dex/pre-transaction/gas-limit";
         const timestamp = new Date().toISOString();
         const requestBody = JSON.stringify(params);
-        
+
         const headers = this.getHeaders(timestamp, "POST", requestPath, requestBody);
 
         const response = await fetch(`https://web3.okx.com${requestPath}`, {
@@ -504,7 +505,7 @@ export class DexAPI {
         }
 
         const result = await response.json();
-        
+
         if (result.code !== "0") {
             throw new Error(`Gas limit request failed: ${result.msg || 'Unknown error'}`);
         }
@@ -512,10 +513,18 @@ export class DexAPI {
         return result;
     }
 
+    async getGasPrice(chainIndex: string): Promise<APIResponse<GasPriceData>> {
+        return this.client.request(
+            "GET",
+            "/api/v5/dex/pre-transaction/gas-price",
+            this.toAPIParams({ chainIndex })
+        );
+    }
+
     async broadcastTransaction(params: BroadcastTransactionParams): Promise<APIResponse<BroadcastTransactionData>> {
         const requestPath = "/api/v5/dex/pre-transaction/broadcast-transaction";
         const timestamp = new Date().toISOString();
-        
+
         // Prepare request body
         const requestBody: any = {
             signedTx: params.signedTx,
@@ -551,7 +560,7 @@ export class DexAPI {
         }
 
         const result = await response.json();
-        
+
         if (result.code !== "0") {
             throw new Error(`Broadcast transaction failed: ${result.msg || 'Unknown error'}`);
         }
@@ -563,7 +572,7 @@ export class DexAPI {
         const queryParams = new URLSearchParams();
         queryParams.append('address', params.address);
         queryParams.append('chainIndex', params.chainIndex);
-        
+
         if (params.txStatus) queryParams.append('txStatus', params.txStatus);
         if (params.orderId) queryParams.append('orderId', params.orderId);
         if (params.cursor) queryParams.append('cursor', params.cursor);
@@ -583,7 +592,7 @@ export class DexAPI {
         }
 
         const result = await response.json();
-        
+
         if (result.code !== "0") {
             throw new Error(`Get transaction orders failed: ${result.msg || 'Unknown error'}`);
         }
