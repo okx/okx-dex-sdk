@@ -129,6 +129,11 @@ export interface SwapResponseData {
     msg: string;
 }
 
+// New interface for approve transaction API response
+export interface ApproveTransactionData {
+    dexApproveContractAddress: string;
+}
+
 // Update getSwapData and executeSolanaSwap to use this
 export interface SwapExecutionData {
     routerResult: {
