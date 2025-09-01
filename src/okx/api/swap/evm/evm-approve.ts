@@ -1,7 +1,7 @@
 // src/api/swap/evm/evm-approve.ts
 import { ethers } from "ethers";
 import { SwapExecutor } from "../types";
-import { SwapParams, SwapResponseData, SwapResult, ChainConfig, OKXConfig, APIResponse, ChainData } from "../../../types";
+import { SwapParams, SwapResponseData, SwapResult, ChainConfig, OKXConfig, APIResponse, ApproveTransactionData } from "../../../types";
 import { HTTPClient } from "../../../core/http-client";
 
 // ERC20 ABI for approval
@@ -63,7 +63,7 @@ export class EVMApproveExecutor implements SwapExecutor {
             throw new Error("EVM wallet required");
         }
 
-        const dexContractAddress = await this.getDexContractAddress(chainId);
+        const dexContractAddress = await this.getDexContractAddress(chainId, tokenAddress, amount);
 
         // Check current allowance
         const currentAllowance = await this.getAllowance(
@@ -91,19 +91,22 @@ export class EVMApproveExecutor implements SwapExecutor {
         }
     }
 
-    private async getDexContractAddress(chainId: string): Promise<string> {
+    private async getDexContractAddress(chainId: string, tokenAddress: string, amount: string): Promise<string> {
         try {
-            const response = await this.httpClient.request<APIResponse<ChainData>>(
+            const response = await this.httpClient.request<APIResponse<ApproveTransactionData>>(
                 'GET',
-                '/api/v5/dex/aggregator/supported/chain',
-                { chainId }
+                '/api/v5/dex/aggregator/approve-transaction',
+                {
+                    chainIndex: chainId,
+                    tokenContractAddress: tokenAddress,
+                    approveAmount: amount
+                }
             );
 
-            if (!response.data?.[0]?.dexTokenApproveAddress) {
+            if (!response.data?.[0]?.dexApproveContractAddress) {
                 throw new Error(`No dex contract address found for chain ${chainId}`);
             }
-
-            return response.data[0].dexTokenApproveAddress;
+            return response.data[0].dexApproveContractAddress;
         } catch (error) {
             console.error('Error getting dex contract address:', error);
             throw error;
