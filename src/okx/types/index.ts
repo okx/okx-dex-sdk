@@ -355,6 +355,26 @@ export interface GasLimitData {
     gasLimit: string;
 }
 
+export interface GasPriceData {
+    normal: string;
+    min: string;
+    max: string;
+    supporteip1559: boolean;
+    eip1559Protocol?: {
+        suggestBaseFee: string;
+        baseFee: string;
+        proposePriorityFee: string;
+        safePriorityFee: string;
+        fastPriorityFee: string;
+    };
+    priorityFee?: {
+        proposePriorityFee: string;
+        safePriorityFee: string;
+        fastPriorityFee: string;
+        extremePriorityFee: string;
+    }; // solana only
+}
+
 export interface BroadcastTransactionParams {
     signedTx: string;
     chainIndex: string;
