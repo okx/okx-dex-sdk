@@ -103,10 +103,10 @@ export class EVMApproveExecutor implements SwapExecutor {
                 }
             );
 
-            if (!response.data?.[0]?.dexApproveContractAddress) {
+            if (!response.data?.[0]?.dexContractAddress) {
                 throw new Error(`No dex contract address found for chain ${chainId}`);
             }
-            return response.data[0].dexApproveContractAddress;
+            return response.data[0].dexContractAddress;
         } catch (error) {
             console.error('Error getting dex contract address:', error);
             throw error;
