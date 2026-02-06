@@ -11,7 +11,7 @@ export interface CrossChainQuoteParams {
     fromTokenAddress: string;
     toTokenAddress: string;
     amount: string;
-    slippagePercent: string;
+    slippage: string;
     sort?: string;
     dexIds?: string;
     allowBridge?: string;
@@ -50,7 +50,7 @@ export class BridgeAPI {
     // Get quote for a cross-chain swap
     async getCrossChainQuote(params: CrossChainQuoteParams) {
         // Validate slippage
-        const slippageValue = parseFloat(params.slippagePercent);
+        const slippageValue = parseFloat(params.slippage);
         if (isNaN(slippageValue) || slippageValue < 0.002 || slippageValue > 0.5) {
             throw new Error('Slippage must be between 0.002 (0.2%) and 0.5 (50%)');
         }
