@@ -192,7 +192,7 @@ describe('EVM Examples Tests', () => {
           toTokenAddress: WETH_ADDRESS,
           amount: '1000000', // Match quote test amount
           autoSlippage: true,
-          maxAutoSlippagePercent: '1',
+          maxAutoSlippagePercent: '100',
           userWalletAddress: process.env.EVM_WALLET_ADDRESS!,
           slippagePercent: '0.5' // Add explicit slippagePercent
         }));
@@ -230,7 +230,7 @@ describe('EVM Examples Tests', () => {
         fromTokenAddress: USDC_ADDRESS,
         toTokenAddress: WETH_ADDRESS,
         amount: '1000000',
-        slippagePercent: '2', // Invalid slippagePercent > 1
+        slippagePercent: '200', // Invalid slippagePercent > 100
         userWalletAddress: process.env.EVM_WALLET_ADDRESS!
       })).rejects.toThrow();
     });

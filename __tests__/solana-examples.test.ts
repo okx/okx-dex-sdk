@@ -152,7 +152,7 @@ describe('Solana Examples Tests', () => {
           toTokenAddress: SOL_ADDRESS,
           amount: '1000000',
           autoSlippage: true,
-          maxAutoSlippagePercent: '1',
+          maxAutoSlippagePercent: '100',
           userWalletAddress: process.env.SOLANA_WALLET_ADDRESS!,
           slippagePercent: '0.5'
         }));

@@ -146,7 +146,7 @@ describe('Sui Examples Tests', () => {
           toTokenAddress: USDC_ADDRESS,
           amount: TEST_AMOUNT,
           autoSlippage: true,
-          maxAutoSlippagePercent: '1',
+          maxAutoSlippagePercent: '100',
           userWalletAddress: process.env.SUI_WALLET_ADDRESS!,
           slippagePercent: '0.1'
         }));
