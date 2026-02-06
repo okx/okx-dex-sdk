@@ -323,9 +323,9 @@ export class DexAPI {
             if (
                 isNaN(slippageValue) ||
                 slippageValue < 0 ||
-                slippageValue > 1
+                slippageValue > 100
             ) {
-                throw new Error("Slippage must be between 0 and 1");
+                throw new Error("SlippagePercent must be between 0 and 100");
             }
         }
 
@@ -356,8 +356,8 @@ export class DexAPI {
         }
         if (params.slippagePercent) {
             const slippageValue = parseFloat(params.slippagePercent);
-            if (isNaN(slippageValue) || slippageValue < 0 || slippageValue > 1) {
-                throw new Error("Slippage must be between 0 and 1");
+            if (isNaN(slippageValue) || slippageValue < 0 || slippageValue > 100) {
+                throw new Error("SlippagePercent must be between 0 and 100");
             }
         }
         if (params.autoSlippage && !params.maxAutoSlippagePercent) {
