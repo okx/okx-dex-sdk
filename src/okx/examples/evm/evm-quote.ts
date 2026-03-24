@@ -16,9 +16,19 @@ async function main() {
             fromTokenAddress: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
             toTokenAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
             amount: '10000000000000000000',
-            slippagePercent: '0.1'
+            slippagePercent: '0.1',
         });
         console.log('Quote:', JSON.stringify(quote, null, 2));
+
+        const quote_exactOut = await client.dex.getQuote({
+            chainIndex: '1',
+            fromTokenAddress: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE',
+            toTokenAddress: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+            amount: '1000000000', // 1000 USDT 
+            slippagePercent: '0.1',
+            swapMode: 'exactOut'
+        });
+        console.log('Quote:', JSON.stringify(quote_exactOut, null, 2));
     } catch (error) {
         console.error('Error:', error);
     }

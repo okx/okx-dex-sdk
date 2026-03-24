@@ -233,6 +233,7 @@ export interface BaseParams {
     fromTokenAddress: string;
     toTokenAddress: string;
     amount: string;
+    swapMode?: "exactIn" | "exactOut";
     userWalletAddress?: string;
     dexIds?: string;
     directRoute?: boolean;

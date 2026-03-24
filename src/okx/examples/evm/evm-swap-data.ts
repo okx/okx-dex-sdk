@@ -33,6 +33,19 @@ async function main() {
             feePercent: '0.0001'
         });
         console.log('Swap Quote:', JSON.stringify(quote, null, 2));
+
+        // Get a exactOut swap data
+        const quote_exactOut = await client.dex.getSwapData({
+            chainIndex: '8453',
+            fromTokenAddress: '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE', // WETH
+            toTokenAddress: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', // USDC
+            amount: String(0.2 * 10 ** 6), // 0.2 USDC
+            slippagePercent: '0.2',
+            userWalletAddress: walletAddress,
+            swapMode: 'exactOut'
+        });
+        console.log('Swap Quote:', JSON.stringify(quote_exactOut, null, 2));
+        
     } catch (error) {
         console.error('Error:', error);
     }
