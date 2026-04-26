@@ -54,26 +54,40 @@ export class EVMSwapExecutor implements SwapExecutor {
                 
                 // Get current gas prices
                 const feeData = await this.provider.getFeeData();
-                const baseFee = feeData.maxFeePerGas || BigInt(0);
-                const priorityFee = feeData.maxPriorityFeePerGas || BigInt(3000000000); // 3 gwei minimum
-                
-                const transaction = {
+
+                const baseTransaction = {
                     data: tx.data,
                     to: tx.to,
                     value: tx.value || '0',
                     nonce: nonce + retryCount, // Increment nonce for each retry
                     gasLimit: BigInt(tx.gas || 0) * gasMultiplier / BigInt(100),
-                    maxFeePerGas: (baseFee * gasMultiplier) / BigInt(100),
-                    maxPriorityFeePerGas: (priorityFee * gasMultiplier) / BigInt(100)
                 };
+
+                let gasPriceFields: Record<string, bigint>;
+                if (feeData.maxFeePerGas != null && feeData.maxPriorityFeePerGas != null) {
+                    // EIP-1559 chain
+                    gasPriceFields = {
+                        maxFeePerGas: (feeData.maxFeePerGas * gasMultiplier) / BigInt(100),
+                        maxPriorityFeePerGas: (feeData.maxPriorityFeePerGas * gasMultiplier) / BigInt(100),
+                    };
+                } else {
+                    // Legacy chain (e.g. BSC)
+                    const legacyGasPrice = feeData.gasPrice ?? BigInt(3000000000);
+                    gasPriceFields = {
+                        gasPrice: (legacyGasPrice * gasMultiplier) / BigInt(100),
+                    };
+                }
+
+                const transaction = { ...baseTransaction, ...gasPriceFields };
 
                 console.log("Transaction details:", {
                     to: transaction.to,
                     value: transaction.value,
                     nonce: transaction.nonce,
                     gasLimit: transaction.gasLimit.toString(),
-                    maxFeePerGas: transaction.maxFeePerGas.toString(),
-                    maxPriorityFeePerGas: transaction.maxPriorityFeePerGas.toString()
+                    ...Object.fromEntries(
+                        Object.entries(gasPriceFields).map(([k, v]) => [k, v.toString()])
+                    ),
                 });
 
                 console.log("Sending transaction...");
