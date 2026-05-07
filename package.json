@@ -1,5 +1,5 @@
 {
-  "name": "@okx-dex/okx-dex-sdk",
+  "name": "@bric-labs/okx-dex-sdk",
   "version": "1.0.18",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,6 @@
     "test:coverage": "jest --coverage",
     "clean": "rm -rf dist",
     "prepare": "npm run clean && npm run build",
-    "prepublishOnly": "npm test",
     "example:evm-quote": "npx ts-node src/okx/examples/evm/evm-quote.ts",
     "example:evm-swap": "npx ts-node src/okx/examples/evm/evm-swap.ts",
     "example:evm-approve": "npx ts-node src/okx/examples/evm/evm-approve.ts",
