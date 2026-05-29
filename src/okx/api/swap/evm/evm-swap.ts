@@ -52,28 +52,64 @@ export class EVMSwapExecutor implements SwapExecutor {
                 // Get current nonce
                 const nonce = await this.provider.getTransactionCount(this.config.evm.wallet.address);
                 
-                // Get current gas prices
-                const feeData = await this.provider.getFeeData();
-                const baseFee = feeData.maxFeePerGas || BigInt(0);
-                const priorityFee = feeData.maxPriorityFeePerGas || BigInt(3000000000); // 3 gwei minimum
-                
-                const transaction = {
+                const baseTransaction = {
                     data: tx.data,
                     to: tx.to,
                     value: tx.value || '0',
                     nonce: nonce + retryCount, // Increment nonce for each retry
                     gasLimit: BigInt(tx.gas || 0) * gasMultiplier / BigInt(100),
-                    maxFeePerGas: (baseFee * gasMultiplier) / BigInt(100),
-                    maxPriorityFeePerGas: (priorityFee * gasMultiplier) / BigInt(100)
                 };
+
+                // Prefer gas prices from the API response, which already reflect the
+                // requested gasLevel (slow / standard / fast). Fall back to fetching
+                // current network fee data only when the API returns empty/zero values.
+                const apiGasPrice = tx.gasPrice && tx.gasPrice !== '0'
+                    ? BigInt(tx.gasPrice) : null;
+                const apiMaxPriorityFee = tx.maxPriorityFeePerGas && tx.maxPriorityFeePerGas !== '0'
+                    ? BigInt(tx.maxPriorityFeePerGas) : null;
+
+                let gasPriceFields: Record<string, bigint>;
+                if (apiGasPrice !== null) {
+                    if (apiMaxPriorityFee !== null) {
+                        // EIP-1559: both fields present in API response
+                        gasPriceFields = {
+                            maxFeePerGas: apiGasPrice,
+                            maxPriorityFeePerGas: apiMaxPriorityFee,
+                        };
+                    } else {
+                        // Legacy chain: only gasPrice present
+                        gasPriceFields = {
+                            gasPrice: apiGasPrice,
+                        };
+                    }
+                } else {
+                    // Fallback: fetch current gas prices from the network
+                    const feeData = await this.provider.getFeeData();
+                    if (feeData.maxFeePerGas != null && feeData.maxPriorityFeePerGas != null) {
+                        // EIP-1559 chain
+                        gasPriceFields = {
+                            maxFeePerGas: (feeData.maxFeePerGas * gasMultiplier) / BigInt(100),
+                            maxPriorityFeePerGas: (feeData.maxPriorityFeePerGas * gasMultiplier) / BigInt(100),
+                        };
+                    } else {
+                        // Legacy chain (e.g. BSC)
+                        const legacyGasPrice = feeData.gasPrice ?? BigInt(3000000000);
+                        gasPriceFields = {
+                            gasPrice: (legacyGasPrice * gasMultiplier) / BigInt(100),
+                        };
+                    }
+                }
+
+                const transaction = { ...baseTransaction, ...gasPriceFields };
 
                 console.log("Transaction details:", {
                     to: transaction.to,
                     value: transaction.value,
                     nonce: transaction.nonce,
                     gasLimit: transaction.gasLimit.toString(),
-                    maxFeePerGas: transaction.maxFeePerGas.toString(),
-                    maxPriorityFeePerGas: transaction.maxPriorityFeePerGas.toString()
+                    ...Object.fromEntries(
+                        Object.entries(gasPriceFields).map(([k, v]) => [k, v.toString()])
+                    ),
                 });
 
                 console.log("Sending transaction...");
