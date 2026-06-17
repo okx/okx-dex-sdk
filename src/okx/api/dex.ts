@@ -457,7 +457,6 @@ export class DexAPI {
             this.config,
             networkConfig
         );
-
         return executor.executeSwap(swapData, params);
     }
 
