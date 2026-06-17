@@ -57,6 +57,7 @@ export class DexAPI {
             confirmationTimeout: 60000,
             maxRetries: 3,
         },
+
         "10": { // Optimism
             id: "10",
             explorer: "https://web3.okx.com/explorer/optimism/tx",
