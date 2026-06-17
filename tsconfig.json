@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "target": "es2018",
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "ts-node": {
+    "preferTsExts": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
