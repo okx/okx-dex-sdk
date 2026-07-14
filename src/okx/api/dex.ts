@@ -243,6 +243,14 @@ export class DexAPI {
             confirmationTimeout: 60000,
             maxRetries: 3,
         },
+        "4663": { // Robinhood Chain
+            id: "4663",
+            explorer: "https://robinhoodchain.blockscout.com/tx",
+            defaultSlippage: "0.005",
+            maxSlippage: "1",
+            confirmationTimeout: 60000,
+            maxRetries: 3,
+        },
         "5000": { // Mantle
             id: "5000",
             explorer: "https://web3.okx.com/explorer/mantle/tx",
