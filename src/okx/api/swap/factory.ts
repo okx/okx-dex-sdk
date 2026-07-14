@@ -35,6 +35,7 @@ export class SwapExecutorFactory {
             case "81457": // Blast
             case "7000": // Zeta Chain
             case "66": // OKT Chain
+            case "4663": // Robinhood Chain
                 return new EVMSwapExecutor(config, networkConfig);
             default:
                 throw new Error(`Chain ${chainIndex} not supported for swap execution`);
@@ -66,6 +67,7 @@ export class SwapExecutorFactory {
             case "81457": // Blast
             case "7000": // Zeta Chain
             case "66": // OKT Chain
+            case "4663": // Robinhood Chain
                 return new EVMApproveExecutor(config, networkConfig);
             default:
                 throw new Error(`Chain ${chainIndex} not supported for approve execution`);

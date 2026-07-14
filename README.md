@@ -55,6 +55,7 @@ pnpm add @okx-dex/okx-dex-sdk
 | Scroll | `534352` | ✅ | Swap, Quote, Approve, Broadcast |
 | Mantle | `5000` | ✅ | Swap, Quote, Approve, Broadcast |
 | Blast | `81457` | ✅ | Swap, Quote, Approve, Broadcast |
+| Robinhood Chain | `4663` | ✅ | Swap, Quote, Approve, Broadcast |
 | **Other EVM Chains** | | | |
 | Fantom | `250` | ✅ | Swap, Quote, Approve, Broadcast |
 | Gnosis | `100` | ✅ | Swap, Quote, Approve, Broadcast |
